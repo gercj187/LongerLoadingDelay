@@ -1,10 +1,10 @@
 {
 	"Id": "LongerLoadingDelay",
-	"Version": "0.99.7",
+	"Version": "1.00.0",
 	"DisplayName": "LongerLoadingDelay",
 	"Author": "CJ187",
 	"Credits": "Coookie, NotAnOption and ChatGPT",
 	"EntryMethod": "LongerLoadingDelay.Main.Load",
 	"ManagerVersion": "0.27.2",
-	"HomePage": "https://www.nexusmods.com/derailvalley/mods/1153"
+	"HomePage": "https://www.nexusmods.com/derailvalley/mods/1196"
 }
