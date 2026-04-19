@@ -1,0 +1,142 @@
+[FRC]
+UnityPos:     (800.3, 144.9, 504.7)
+TrueWorldPos: (5738.3, 144.9, 8734.7)
+TerrainCoord: (11, 17)
+
+[OR]
+UnityPos:     (622.2, 143.9, 421.5)
+TrueWorldPos: (6383.2, 143.9, 11120.5)
+TerrainCoord: (12, 21)
+
+[CP]
+UnityPos:     (269.6, 145.1, 150.6)
+TrueWorldPos: (1915.6, 145.1, 9203.6)
+TerrainCoord: (3, 17)
+
+[MF]
+UnityPos:     (758.7, 159.3, 144.1)
+TrueWorldPos: (2404.7, 159.3, 10843.1)
+TerrainCoord: (4, 21)
+
+[IMW]
+UnityPos:     (481.8, 133.6, 191.5)
+TrueWorldPos: (2127.8, 133.6, 13359.5)
+TerrainCoord: (4, 26)
+
+[FF]
+UnityPos:     (343.0, 119.3, 342.1)
+TrueWorldPos: (9396.0, 119.3, 13510.1)
+TerrainCoord: (18, 26)
+
+[OWN]
+UnityPos:     (41.1, 125.4, 68.3)
+TrueWorldPos: (11563.1, 125.4, 11590.3)
+TerrainCoord: (22, 22)
+
+[GF]
+UnityPos:     (521.7, 140.2, 302.4)
+TrueWorldPos: (12866.7, 140.2, 11001.4)
+TerrainCoord: (25, 21)
+
+[MB]
+UnityPos:     (-81.8, 216.4, 733.0)
+TrueWorldPos: (12263.2, 216.4, 14724.0)
+TerrainCoord: (23, 28)
+
+[IME]
+UnityPos:     (315.3, 248.1, 613.5)
+TrueWorldPos: (15129.3, 248.1, 15427.5)
+TerrainCoord: (29, 30)
+
+[CME]
+UnityPos:     (807.0, 204.2, 387.1)
+TrueWorldPos: (15621.0, 204.2, 11086.1)
+TerrainCoord: (30, 21)
+
+[HB] (Dock)
+UnityPos:     (-107.4, 113.1, -218.8)
+TrueWorldPos: (13060.6, 113.1, 3073.2)
+TerrainCoord: (25, 6)
+
+[HB] (Tanks)
+UnityPos:     (-470.4, 116.1, -21.8)
+TrueWorldPos: (12697.6, 116.1, 3270.2)
+TerrainCoord: (24, 6)
+
+[HB] (Military)
+UnityPos:     (-700.3, 113.1, -336.4)
+TrueWorldPos: (12467.7, 113.1, 2955.6)
+TerrainCoord: (24, 5)
+
+[CS]
+UnityPos:     (84.6, 134.9, 516.6)
+TrueWorldPos: (9960.6, 134.9, 1339.6)
+TerrainCoord: (19, 2)
+
+[CMS]
+UnityPos:     (273.1, 156.4, 189.1)
+TrueWorldPos: (8503.1, 156.4, 3481.1)
+TerrainCoord: (16, 6)
+
+[SM]
+UnityPos:     (475.1, 131.8, 601.8)
+TrueWorldPos: (7882.1, 131.8, 7185.8)
+TerrainCoord: (15, 14)
+
+[FM]
+UnityPos:     (322.1, 123.9, 91.4)
+TrueWorldPos: (6083.1, 123.9, 6675.4)
+TerrainCoord: (11, 13)
+
+[OWC]
+UnityPos:     (737.4, 125.9, 550.2)
+TrueWorldPos: (4852.4, 125.9, 6311.2)
+TerrainCoord: (9, 12)
+
+[CW]
+UnityPos:     (-13.3, 122.3, 555.8)
+TrueWorldPos: (1632.7, 122.3, 5493.8)
+TerrainCoord: (3, 10)
+
+[SW]
+UnityPos:     (569.0, 147.2, 566.7)
+TrueWorldPos: (1392.0, 147.2, 2212.7)
+TerrainCoord: (2, 4)
+
+[FRS]
+UnityPos:     (375.5, 174.8, 386.0)
+TrueWorldPos: (5313.5, 174.8, 3678.0)
+TerrainCoord: (10, 7)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
