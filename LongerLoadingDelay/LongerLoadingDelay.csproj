@@ -27,15 +27,39 @@
 		<Reference Include="UnityEngine.IMGUIModule">
 			<HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
 		</Reference>
-		
+		<Reference Include="Newtonsoft.Json">
+			<HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\Newtonsoft.Json.dll</HintPath>
+		</Reference>
+		<Reference Include="WorldStreamer">
+			<HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\WorldStreamer.dll</HintPath>
+		</Reference>
+		<Reference Include="DV.TerrainSystem">
+			<HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\DV.TerrainSystem.dll</HintPath>
+		</Reference>
 	</ItemGroup>
 
 	<!-- Unity -->
 	<ItemGroup>
-		<Reference Include="UnityEngine" />
-		<Reference Include="UnityEngine.CoreModule" />
+		<Reference Include="UnityEngine" >
+		  <HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\UnityEngine.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.UI" >
+		  <HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\UnityEngine.UI.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.CoreModule" >
+		  <HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+		</Reference>
 		<Reference Include="UnityEngine.PhysicsModule">
 		  <HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+		</Reference>
+		<Reference Include="Unity.TextMeshPro">
+		  <HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.UIModule">
+			<HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.TerrainModule">
+			<HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\UnityEngine\UnityEngine.TerrainModule.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
