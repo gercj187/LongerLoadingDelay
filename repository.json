@@ -2,7 +2,8 @@
 	"Releases": [
 		{
 			"Id": "LongerLoadingDelay",
-			"Version": "1.0.0",
+			"Version": "1.02.0",
+			"DownloadUrl": "https://github.com/gercj187/LongerLoadingDelay/releases/download/LongerLoadingDelay/LongerLoadingDelay_v1.02.0.zip"
 		}
 	]
 }
