@@ -70,21 +70,35 @@ namespace LongerLoadingDelay
     public class LongerLoadingDelay_Updater : MonoBehaviour
     {
         private Vector2Int? lastCoord;
+		static bool terrainRegistered = false;
+		static bool isInsideWarehouseZone = false;
 
-        void Awake()
-        {
-            StartCoroutine(RegisterTerrain());
-        }
+		public static void ResetTerrainRegistration()
+		{
+			terrainRegistered = false;
+			isInsideWarehouseZone = false;
+		}
+		
+		void Awake()
+		{
+			StartCoroutine(RegisterTerrain());
+		}
 
         IEnumerator RegisterTerrain()
-        {
-            while (TerrainGrid.Instance == null || !TerrainGrid.Instance.IsInitialized)
-                yield return null;
+		{
+			if (terrainRegistered)
+				yield break;
 
-            TerrainGrid.Instance.TerrainsMoved += OnTerrainsMoved;
+			while (TerrainGrid.Instance == null || !TerrainGrid.Instance.IsInitialized)
+				yield return null;
 
-            Main.Log("[LongerLoadingDelay] TerrainGrid registered");
-        }
+			TerrainGrid.Instance.TerrainsMoved -= OnTerrainsMoved;
+			TerrainGrid.Instance.TerrainsMoved += OnTerrainsMoved;
+
+			terrainRegistered = true;
+
+			Main.Log(" TerrainGrid registered");
+		}
 
         void OnTerrainsMoved()
         {
@@ -98,12 +112,27 @@ namespace LongerLoadingDelay
 
             lastCoord = coord;
 
-            if (!IsNearWarehouseTile(coord.Value))
+            bool isNear = IsNearWarehouseTile(coord.Value);
+			if (isNear && !isInsideWarehouseZone)
+			{
+				isInsideWarehouseZone = true;
+
+				Main.Log(" ENTER warehouse zone → " + coord.Value);
+
+				CoroutineManager.Instance.Run(WaitForStreaming());
 				return;
+			}
+			if (!isNear && isInsideWarehouseZone)
+			{
+				isInsideWarehouseZone = false;
 
-            Main.Log("[LongerLoadingDelay] Entered warehouse tile → " + coord.Value);
-
-            CoroutineManager.Instance.Run(WaitForStreaming());
+				Main.Log(" EXIT warehouse zone → " + coord.Value);
+				return;
+			}
+			if (isNear && isInsideWarehouseZone)
+			{
+				return;
+			}
         }
 		
 		static bool IsNearWarehouseTile(Vector2Int coord)
@@ -126,7 +155,7 @@ namespace LongerLoadingDelay
             while (!WorldStreamingInit.IsStreamingDone)
                 yield return null;
 
-            Main.Log("[LongerLoadingDelay] Streaming ready → processing warehouses");
+            Main.Log(" Streaming ready → processing warehouses");
 
             ProcessAllWarehouses();
         }
@@ -135,7 +164,7 @@ namespace LongerLoadingDelay
         {
             var all = UnityEngine.Object.FindObjectsOfType<WarehouseMachineController>();
 
-            Main.Log("[LongerLoadingDelay] Found controllers: " + all.Length);
+            Main.Log(" Found controllers: " + all.Length);
 
             foreach (var ctrl in all)
             {
@@ -157,11 +186,11 @@ namespace LongerLoadingDelay
 
 			if (seq == null)
 			{
-				Main.Log("[LongerLoadingDelay] No sequence for " + track);
+				Main.Log(" No sequence for " + track);
 				return;
 			}
 
-			Main.Log($"[LongerLoadingDelay] PROCESS {track} status={seq.status} CarsDone={seq.CarsDone}/{seq.JobCars}");
+			Main.Log($" PROCESS {track} status={seq.status} CarsDone={seq.CarsDone}/{seq.JobCars}");
 
 			bool isLoading = seq.JobType == "LOAD";
 			var machine = ctrl.warehouseMachine;
@@ -210,7 +239,7 @@ namespace LongerLoadingDelay
 			// =========================
 			int actuallyLoaded = GetActuallyLoadedCars(machine, isLoading);
 
-			Main.Log($"[LongerLoadingDelay] REAL STATE loaded={actuallyLoaded}");
+			Main.Log($" REAL STATE loaded={actuallyLoaded}");
 
 			// =========================
 			// DONE → VERIFY & FIX
@@ -219,7 +248,7 @@ namespace LongerLoadingDelay
 			{
 				int missing = seq.JobCars - actuallyLoaded;
 
-				Main.Log($"[LongerLoadingDelay] DONE CHECK target={seq.JobCars} actual={actuallyLoaded} missing={missing}");
+				Main.Log($" DONE CHECK target={seq.JobCars} actual={actuallyLoaded} missing={missing}");
 
 				if (missing <= 0)
 				{
@@ -227,18 +256,18 @@ namespace LongerLoadingDelay
 					
 					seq.status = "applied";
 
-					Main.Log("[LongerLoadingDelay] MARKED APPLIED " + seq.jobID);
+					Main.Log(" MARKED APPLIED " + seq.jobID);
 					return;
 				}
 
-				Main.Log("[LongerLoadingDelay] DONE → applying missing cars");
+				Main.Log(" DONE → applying missing cars");
 
 				var jobs = machine.GetCurrentLoadUnloadData(
 					isLoading ? WarehouseTaskType.Loading : WarehouseTaskType.Unloading);
 
 				if (jobs == null || jobs.Count == 0)
 				{
-					Main.Log("[LongerLoadingDelay] DONE but no jobs found");
+					Main.Log(" DONE but no jobs found");
 					return;
 				}
 
@@ -263,7 +292,7 @@ namespace LongerLoadingDelay
 
 							processed++;
 
-							Main.Log($"[LongerLoadingDelay] DONE APPLY {processed}/{missing}");
+							Main.Log($" DONE APPLY {processed}/{missing}");
 						}
 
 						if (processed >= missing)
@@ -277,7 +306,7 @@ namespace LongerLoadingDelay
 				
 				seq.status = "applied";
 
-				Main.Log("[LongerLoadingDelay] DONE APPLIED " + seq.jobID);
+				Main.Log(" DONE APPLIED " + seq.jobID);
 				return;
 			}
 
@@ -287,11 +316,11 @@ namespace LongerLoadingDelay
 			int targetCars = seq.CarsDone;
 			int missingActive = targetCars - actuallyLoaded;
 
-			Main.Log($"[LongerLoadingDelay] ACTIVE target={targetCars} actual={actuallyLoaded} missing={missingActive}");
+			Main.Log($" ACTIVE target={targetCars} actual={actuallyLoaded} missing={missingActive}");
 
 			if (missingActive <= 0)
 			{
-				Main.Log("[LongerLoadingDelay] No catch-up needed");
+				Main.Log(" No catch-up needed");
 
 				ctrl.ActivateExternally();
 				return;
@@ -302,7 +331,7 @@ namespace LongerLoadingDelay
 
 			if (jobsActive == null || jobsActive.Count == 0)
 			{
-				Main.Log("[LongerLoadingDelay] No jobs found during active apply");
+				Main.Log(" No jobs found during active apply");
 				return;
 			}
 
@@ -327,7 +356,7 @@ namespace LongerLoadingDelay
 
 						processedActive++;
 
-						Main.Log($"[LongerLoadingDelay] APPLY {(isLoading ? "LOAD" : "UNLOAD")} {processedActive}/{missingActive}");
+						Main.Log($" APPLY {(isLoading ? "LOAD" : "UNLOAD")} {processedActive}/{missingActive}");
 					}
 
 					if (processedActive >= missingActive)
@@ -338,7 +367,7 @@ namespace LongerLoadingDelay
 					break;
 			}
 
-			Main.Log($"[LongerLoadingDelay] ACTIVE applied {processedActive}/{missingActive}");
+			Main.Log($" ACTIVE applied {processedActive}/{missingActive}");
 
 			ctrl.ActivateExternally();
 		}
@@ -382,7 +411,7 @@ namespace LongerLoadingDelay
 					seq.CarsDone = seq.JobCars;
 					seq.status = "done";
 
-					Main.Log("[LongerLoadingDelay] DONE " + seq.jobID);
+					Main.Log(" DONE " + seq.jobID);
 
 					// =========================
 					// NEXT JOB ACTIVATION
@@ -399,11 +428,11 @@ namespace LongerLoadingDelay
 						next.Timer = 0f;
 						next.CarsDone = 0;
 
-						Main.Log("[LongerLoadingDelay] ACTIVATED NEXT JOB " + next.jobID);
+						Main.Log(" ACTIVATED NEXT JOB " + next.jobID);
 					}
 					else
 					{
-						Main.Log("[LongerLoadingDelay] NO NEXT JOB FOUND");
+						Main.Log(" NO NEXT JOB FOUND");
 					}
 				}
 			}
@@ -416,20 +445,20 @@ namespace LongerLoadingDelay
     [HarmonyPatch(typeof(WarehouseMachineController), "OnEnable")]
     public static class InitUpdater
     {
-        static bool created = false;
-
         [HarmonyPostfix]
-        static void Postfix()
-        {
-            if (created) return;
-            created = true;
+		static void Postfix()
+		{
+			var go = GameObject.Find("LongerLoadingDelay_Updater");
 
-            var go = new GameObject("LongerLoadingDelay_Updater");
-            GameObject.DontDestroyOnLoad(go);
-            go.AddComponent<LongerLoadingDelay_Updater>();
+			if (go == null)
+			{
+				go = new GameObject("LongerLoadingDelay_Updater");
+				GameObject.DontDestroyOnLoad(go);
+				go.AddComponent<LongerLoadingDelay_Updater>();
 
-            Main.Log("[LongerLoadingDelay] Updater created");
-        }
+				Main.Log(" Updater created");
+			}
+		}
     }
 
     // =========================
@@ -489,43 +518,60 @@ namespace LongerLoadingDelay
     public static class LoadPatch
     {
         [HarmonyPostfix]
-        static void Postfix(StartGameData_FromSaveGame __instance)
-        {
-            var root = __instance.GetSaveGameData()
-                .GetJObject("LongerLoadingDelay_Data");
+		static void Postfix(StartGameData_FromSaveGame __instance)
+		{			
+			LongerLoadingDelay_Updater.ResetTerrainRegistration();
+			
+			Main.activeSequences.Clear();
 
-            if (root == null) return;
+			var root = __instance.GetSaveGameData()
+				.GetJObject("LongerLoadingDelay_Data");
 
-            Main.activeSequences.Clear();
+			if (root == null)
+			{
+				Main.Log(" No saved data");
+				return;
+			}
 
-            foreach (var prop in root.Properties())
-            {
-                string track = prop.Name;
-                var arr = prop.Value as JArray;
+			foreach (var prop in root.Properties())
+			{
+				string track = prop.Name;
+				var arr = prop.Value as JArray;
 
-                if (arr == null) continue;
+				if (arr == null) continue;
 
-                foreach (var t in arr)
-                {
-                    if (t is not JObject obj) continue;
+				foreach (var t in arr)
+				{
+					if (t is not JObject obj) continue;
 
-                    Main.activeSequences.Add(new LongerLoadingDelay_SequenceData
-                    {
-                        trackID = track,
-                        jobID = obj["JobID"]?.ToString() ?? "",
-                        JobCars = obj["JobCars"]?.ToObject<int>() ?? 0,
-                        JobType = obj["JobType"]?.ToString() ?? "LOAD",
-                        DelayPerCar = obj["DelayPerCar"]?.ToObject<float>() ?? 1f,
-                        Timer = obj["Timer"]?.ToObject<float>() ?? 0f,
-                        CarsDone = obj["CarsDone"]?.ToObject<int>() ?? 0,
-                        status = obj["status"]?.ToString() ?? "active"
-                    });
-                }
-            }
+					Main.activeSequences.Add(new LongerLoadingDelay_SequenceData
+					{
+						trackID = track,
+						jobID = obj["JobID"]?.ToString() ?? "",
+						JobCars = obj["JobCars"]?.ToObject<int>() ?? 0,
+						JobType = obj["JobType"]?.ToString() ?? "LOAD",
+						DelayPerCar = obj["DelayPerCar"]?.ToObject<float>() ?? 1f,
+						Timer = obj["Timer"]?.ToObject<float>() ?? 0f,
+						CarsDone = obj["CarsDone"]?.ToObject<int>() ?? 0,
+						status = obj["status"]?.ToString() ?? "active"
+					});
+				}
+			}
 
-            Main.Log("[LongerLoadingDelay] LOADED");
-        }
+			Main.Log(" LOADED");
+		}
     }	
+	
+	[HarmonyPatch(typeof(StartGameData_NewCareer), "PrepareNewSaveData")]
+	public static class NewCareer_ResetPatch
+	{
+		[HarmonyPostfix]
+		static void Postfix()
+		{
+			LongerLoadingDelay_Updater.ResetTerrainRegistration();
+			Main.Log(" Reset terrain registration (new career)");
+		}
+	}
 	
 	// =========================
 	// SEQUENCE CREATION
@@ -536,7 +582,7 @@ namespace LongerLoadingDelay
 		[HarmonyPrefix]
 		static void Prefix(WarehouseMachineController __instance)
 		{
-			Main.Log("[LongerLoadingDelay] StartLoadSequence TRIGGERED");
+			Main.Log(" StartLoadSequence TRIGGERED");
 			SequenceHelper.CreateSequence(__instance, "LOAD");
 		}
 
@@ -561,7 +607,7 @@ namespace LongerLoadingDelay
 		[HarmonyPrefix]
 		static void Prefix(WarehouseMachineController __instance)
 		{
-			Main.Log("[LongerLoadingDelay] StartUnloadSequence TRIGGERED");
+			Main.Log(" StartUnloadSequence TRIGGERED");
 			SequenceHelper.CreateSequence(__instance, "UNLOAD");
 		}
 
@@ -591,7 +637,7 @@ namespace LongerLoadingDelay
 
 			if (__instance == null || __instance.warehouseMachine == null)
 			{
-				Main.Log("[LongerLoadingDelay] CreateSequence aborted: instance not ready");
+				Main.Log(" CreateSequence aborted: instance not ready");
 				return;
 			}
 
@@ -602,21 +648,21 @@ namespace LongerLoadingDelay
 
 			if (data == null || data.Count == 0)
 			{
-				Main.Log("[LongerLoadingDelay] No jobs found for sequence creation");
+				Main.Log(" No jobs found for sequence creation");
 				return;
 			}
 
 			string track = __instance.warehouseTrackName;
 			float delayMinutes = Main.Settings.LoadingDelay / 60f;
 
-			Main.Log($"[LongerLoadingDelay] Creating sequences for track={track}");
+			Main.Log($" Creating sequences for track={track}");
 
 			foreach (var job in data)
 			{
 				bool exists = Main.activeSequences.Exists(s => s.jobID == job.id);
 				if (exists)
 				{
-					Main.Log($"[LongerLoadingDelay] Sequence already exists for job={job.id}");
+					Main.Log($" Sequence already exists for job={job.id}");
 					continue;
 				}
 
@@ -646,8 +692,86 @@ namespace LongerLoadingDelay
 
 				Main.activeSequences.Add(seq);
 
-				Main.Log($"[LongerLoadingDelay] START {type} job={job.id} cars={totalCars} status={seq.status}");
+				Main.Log($" START {type} job={job.id} cars={totalCars} status={seq.status}");
 			}
+		}
+	}
+	
+	// =========================
+	// SCREEN TIMER SYSTEM
+	// =========================
+	static class WarehouseScreenTimer
+	{
+		static Dictionary<WarehouseMachineController, Coroutine> activeLoops = new();
+
+		public static void Start(WarehouseMachineController ctrl)
+		{
+			if (ctrl == null)
+				return;
+
+			if (activeLoops.TryGetValue(ctrl, out var oldLoop))
+			{
+				ctrl.StopCoroutine(oldLoop);
+			}
+
+			var newLoop = ctrl.StartCoroutine(UpdateLoop(ctrl));
+			activeLoops[ctrl] = newLoop;
+		}
+
+		static IEnumerator UpdateLoop(WarehouseMachineController ctrl)
+		{
+			while (ctrl != null && ctrl.LoadOrUnloadOngoing)
+			{
+				UpdateText(ctrl);
+				yield return new WaitForSeconds(1f);
+			}
+
+			// cleanup
+			if (ctrl != null)
+				activeLoops.Remove(ctrl);
+		}
+
+		static void UpdateText(WarehouseMachineController ctrl)
+		{
+			if (ctrl.displayTitleText == null)
+				return;
+
+			string track = ctrl.warehouseTrackName;
+
+			var seq = Main.activeSequences
+				.FirstOrDefault(s =>
+					s.trackID == track &&
+					(s.status == "active" || s.status == "done"));
+
+			if (seq == null)
+				return;
+
+			// =========================
+			// 🔥 BASE TEXT CLEAN
+			// =========================
+			string fullText = ctrl.displayTitleText.text;
+
+			// nur erste Zeile behalten (Vanilla Text)
+			string baseText = fullText.Split('\n')[0];
+
+			// =========================
+			// 🔥 ECHTER COUNTDOWN
+			// =========================
+			float totalMinutes = seq.JobCars * seq.DelayPerCar;
+			float remainingMinutes = Mathf.Max(0f, totalMinutes - seq.Timer);
+
+			int min = Mathf.FloorToInt(remainingMinutes);
+			int sec = Mathf.FloorToInt((remainingMinutes - min) * 60f);
+
+			string countdown = $"{min}:{sec:00}";
+			string jobId = seq.jobID;
+
+			// =========================
+			// 🔥 FINAL TEXT (STABIL)
+			// =========================
+			ctrl.displayTitleText.text =
+		$@"{baseText}
+[{jobId}]                                          ~ {countdown} Min";
 		}
 	}
 	
@@ -665,11 +789,11 @@ namespace LongerLoadingDelay
 
             string jobID = jobBooklet.job.ID;
 
-            Main.Log("[LongerLoadingDelay] ABANDON DETECTED → " + jobID);
+            Main.Log(" ABANDON DETECTED → " + jobID);
 
             Main.activeSequences.RemoveAll(s => s.jobID == jobID);
 
-            Main.Log("[LongerLoadingDelay] REMOVED FROM SAVE → " + jobID);
+            Main.Log(" REMOVED FROM SAVE → " + jobID);
         }
     }
 	
@@ -687,11 +811,11 @@ namespace LongerLoadingDelay
 
 			string jobID = job.ID;
 
-			Main.Log("[LongerLoadingDelay] COMPLETED → " + jobID);
+			Main.Log(" COMPLETED → " + jobID);
 
 			Main.activeSequences.RemoveAll(s => s.jobID == jobID);
 
-			Main.Log("[LongerLoadingDelay] REMOVED AFTER COMPLETE → " + jobID);
+			Main.Log(" REMOVED AFTER COMPLETE → " + jobID);
 		}
 	}
 	
@@ -750,13 +874,13 @@ namespace LongerLoadingDelay
 
 			if (setter == null)
 			{
-				Main.Log("[LongerLoadingDelay] ERROR: TimeLimit setter not found");
+				Main.Log(" ERROR: TimeLimit setter not found");
 				return;
 			}
 
 			setter.Invoke(job, new object[] { final });
 
-			Main.Log($"[LongerLoadingDelay] {type} FINAL → {vanilla:F1} + {extraGameTime:F1} = {final:F1}");
+			Main.Log($" {type} FINAL → {vanilla:F1} + {extraGameTime:F1} = {final:F1}");
 		}
 	}
 	
@@ -775,36 +899,7 @@ namespace LongerLoadingDelay
 			if (!__instance.LoadOrUnloadOngoing)
 				return;
 
-			string track = __instance.warehouseTrackName;
-
-			var seq = Main.activeSequences
-				.FirstOrDefault(s =>
-					s.trackID == track &&
-					(s.status == "active" || s.status == "done"));
-
-			if (seq == null)
-				return;
-
-			int remainingCars = seq.JobCars - seq.CarsDone;
-			float minutesLeft = remainingCars * seq.DelayPerCar;
-
-			int min = Mathf.FloorToInt(minutesLeft);
-			int sec = Mathf.FloorToInt((minutesLeft - min) * 60f);
-
-			string countdown = $"~ {min}:{sec:00} Min";
-
-			if (__instance.displayTitleText == null)
-				return;
-
-			string baseText = __instance.displayTitleText.text;
-
-			int idx = baseText.LastIndexOf("~ ");
-			if (idx >= 0)
-				baseText = baseText.Substring(0, idx).TrimEnd();
-
-			string padded = baseText.PadRight(38);
-
-			__instance.displayTitleText.text = padded + countdown;
+			WarehouseScreenTimer.Start(__instance);
 		}
 	}
 }
