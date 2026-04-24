@@ -6,5 +6,6 @@
 	"Credits": "Coookie, NotAnOption and ChatGPT",
 	"EntryMethod": "LongerLoadingDelay.Main.Load",
 	"ManagerVersion": "0.27.2",
-	"HomePage": "https://www.nexusmods.com/derailvalley/mods/1196"
+	"HomePage": "https://www.nexusmods.com/derailvalley/mods/1196",
+	"Repository": "https://raw.githubusercontent.com/gercj187/LongerLoadingDelay/refs/heads/main/repository.json"
 }
