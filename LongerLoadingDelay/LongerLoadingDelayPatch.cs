@@ -172,7 +172,7 @@ namespace LongerLoadingDelay
             }
         }
 
-        static void TryProcess(WarehouseMachineController ctrl)
+        public static void TryProcess(WarehouseMachineController ctrl)
 		{
 			if (!Main.Enabled)
 				return;
@@ -515,9 +515,9 @@ namespace LongerLoadingDelay
     // LOAD
     // =========================
     [HarmonyPatch(typeof(StartGameData_FromSaveGame), "DoLoad")]
-    public static class LoadPatch
-    {
-        [HarmonyPostfix]
+	public static class LoadPatch
+	{
+		[HarmonyPostfix]
 		static void Postfix(StartGameData_FromSaveGame __instance)
 		{			
 			LongerLoadingDelay_Updater.ResetTerrainRegistration();
@@ -559,8 +559,72 @@ namespace LongerLoadingDelay
 			}
 
 			Main.Log(" LOADED");
+			CoroutineManager.Instance.Run(DelayedInitialSync());
 		}
-    }	
+		
+		static IEnumerator DelayedInitialSync()
+		{
+			while (!WorldStreamingInit.IsStreamingDone)
+				yield return null;
+
+			while (!AStartGameData.carsAndJobsLoadingFinished)
+				yield return null;
+
+			yield return new WaitForSeconds(0.2f);
+
+			Main.Log(" INITIAL LOAD SYNC");
+
+			foreach (var ctrl in WarehouseMachineController.allControllers)
+			{
+				if (ctrl == null)
+					continue;
+
+				if (!ctrl.isActiveAndEnabled)
+					continue;
+
+				if (ctrl.warehouseMachine == null)
+					continue;
+
+				bool shouldWork =
+					ctrl.warehouseMachine.AnyTrainToLoadPresentOnTrack() ||
+					ctrl.warehouseMachine.AnyTrainToUnloadPresentOnTrack();
+
+				var seq = Main.activeSequences
+					.FirstOrDefault(s => s.trackID == ctrl.warehouseTrackName);
+
+				if (seq == null)
+					continue;
+
+				if (seq.status == "applied")
+				{
+					Main.Log(" SKIP applied → " + seq.jobID);
+					continue;
+				}
+
+				Main.Log(" LOAD SYNC TRIGGER → " + ctrl.warehouseTrackName);
+
+				ctrl.ActivateExternally();
+				int safety = 0;
+
+				while (safety < 20)
+				{
+					if (ctrl.warehouseMachine != null)
+					{
+						var data = ctrl.warehouseMachine.GetCurrentLoadUnloadData(
+							WarehouseTaskType.Loading);
+
+						if (data != null && data.Count > 0)
+							break;
+					}
+
+					safety++;
+					yield return new WaitForSeconds(0.1f);
+				}
+
+				LongerLoadingDelay_Updater.TryProcess(ctrl);
+			}
+		}
+	}
 	
 	[HarmonyPatch(typeof(StartGameData_NewCareer), "PrepareNewSaveData")]
 	public static class NewCareer_ResetPatch
@@ -760,10 +824,13 @@ namespace LongerLoadingDelay
 			float totalMinutes = seq.JobCars * seq.DelayPerCar;
 			float remainingMinutes = Mathf.Max(0f, totalMinutes - seq.Timer);
 
-			int min = Mathf.FloorToInt(remainingMinutes);
-			int sec = Mathf.FloorToInt((remainingMinutes - min) * 60f);
+			int totalSeconds = Mathf.FloorToInt(remainingMinutes * 60f);
 
-			string countdown = $"{min}:{sec:00}";
+			int hours = totalSeconds / 3600;
+			int minutes = (totalSeconds % 3600) / 60;
+			int seconds = totalSeconds % 60;
+
+			string countdown = $"{hours:00}:{minutes:00}:{seconds:00}";
 			string jobId = seq.jobID;
 
 			// =========================
@@ -771,7 +838,7 @@ namespace LongerLoadingDelay
 			// =========================
 			ctrl.displayTitleText.text =
 		$@"{baseText}
-[{jobId}]                                          ~ {countdown} Min";
+[{jobId}]                                          {countdown}";
 		}
 	}
 	
@@ -890,16 +957,96 @@ namespace LongerLoadingDelay
 	[HarmonyPatch(typeof(WarehouseMachineController), "UpdateScreen")]
 	public static class WarehouseDisplay_Countdown
 	{
+		static Dictionary<WarehouseMachineController, Coroutine> runningChecks = new();
+
 		[HarmonyPostfix]
 		static void Postfix(WarehouseMachineController __instance)
 		{
 			if (!Main.Enabled)
 				return;
 
+			if (__instance == null || __instance.warehouseMachine == null)
+				return;
+
+			string track = __instance.warehouseTrackName;
+
+			var seq = Main.activeSequences
+				.FirstOrDefault(s => s.trackID == track);
+
+			if (seq != null && seq.status != "applied")
+			{
+				if (__instance == null)
+					return;
+
+				if (!runningChecks.ContainsKey(__instance))
+				{
+					Main.Log(" REENTER CHECK SCHEDULED → " + track);
+
+					var co = CoroutineManager.Instance.Run(
+						DelayedReenterCheck(__instance));
+
+					runningChecks[__instance] = co;
+				}
+			}
+
 			if (!__instance.LoadOrUnloadOngoing)
 				return;
 
 			WarehouseScreenTimer.Start(__instance);
+		}
+
+		static IEnumerator DelayedReenterCheck(WarehouseMachineController ctrl)
+		{
+			yield return null;
+			yield return new WaitForSeconds(1f);
+
+			if (ctrl == null || ctrl.warehouseMachine == null)
+				yield break;
+
+			if (ctrl.LoadOrUnloadOngoing)
+			{
+				Main.Log(" REENTER BLOCKED (machine active)");
+				Cleanup(ctrl);
+				yield break;
+			}
+
+			var machine = ctrl.warehouseMachine;
+
+			bool hasJobs =
+				machine.GetCurrentLoadUnloadData(WarehouseTaskType.Loading)?.Count > 0 ||
+				machine.GetCurrentLoadUnloadData(WarehouseTaskType.Unloading)?.Count > 0;
+
+			if (!hasJobs)
+			{
+				Main.Log(" REENTER BLOCKED (no jobs)");
+				Cleanup(ctrl);
+				yield break;
+			}
+
+			Main.Log(" REENTER EXECUTE");
+
+			LongerLoadingDelay_Updater.TryProcess(ctrl);
+
+			Cleanup(ctrl);
+		}
+
+		internal static void Cleanup(WarehouseMachineController ctrl)
+		{
+			if (ctrl == null)
+				return;
+
+			if (runningChecks.ContainsKey(ctrl))
+				runningChecks.Remove(ctrl);
+		}
+	}
+	
+	[HarmonyPatch(typeof(WarehouseMachineController), "OnDisable")]
+	public static class WarehouseDisplay_Reset
+	{
+		[HarmonyPostfix]
+		static void Postfix(WarehouseMachineController __instance)
+		{
+			WarehouseDisplay_Countdown.Cleanup(__instance);
 		}
 	}
 }
