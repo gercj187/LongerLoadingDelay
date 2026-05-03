@@ -34,6 +34,18 @@ namespace LongerLoadingDelay
         public static List<LongerLoadingDelay_SequenceData> activeSequences = new List<LongerLoadingDelay_SequenceData>();
 
         private static WorldClockController? cachedClock;
+		
+		// =========================
+		// DEBUG: CLEAR ALL SEQUENCES
+		// =========================
+		public static void ClearAllSequences()
+		{
+			Log(" <<< RESET MOD >>>");
+
+			activeSequences.Clear();
+
+			LongerLoadingDelay_Updater.ResetTerrainRegistration();
+		}
 
         // =========================
         // GAME TIME
@@ -110,7 +122,6 @@ namespace LongerLoadingDelay
 
 				if (job == null)
 				{
-					Main.Log("[LongerLoadingDelay] REMOVE (job null fallback) " + seq.jobID);
 					activeSequences.RemoveAt(i);
 				}
 			}
@@ -179,6 +190,37 @@ namespace LongerLoadingDelay
 			DrawTimeInfo("3 drop offs", 54f, extraMinutes);
 
             GUILayout.EndVertical();
+			
+			// =========================
+			// DEBUG TOGGLE (RIGHT ALIGNED)
+			// =========================
+			GUILayout.BeginHorizontal();
+
+			// linker Platz (drückt Checkbox nach rechts)
+			GUILayout.FlexibleSpace();
+
+			// Checkbox + Label
+			EnableDebug = GUILayout.Toggle(EnableDebug, "", GUILayout.ExpandWidth(false));
+
+			GUILayout.EndHorizontal();
+			
+			// =========================
+			// DEBUG SECTION
+			// =========================
+			if (EnableDebug)
+			{
+				GUILayout.Space(10);
+				GUILayout.BeginVertical("box");
+
+				GUILayout.Label("<b>DEBUG</b>");
+
+				if (GUILayout.Button("RESET THE MOD!!!", GUILayout.Width(300)))
+				{
+					Main.ClearAllSequences();
+				}
+
+				GUILayout.EndVertical();
+			}
         }
 
         private void DrawTimeInfo(string label, float baseMinutes, float extraMinutes)
