@@ -5,62 +5,33 @@
 		<LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>
 		<WarningsAsErrors>CS8600;CS8602;CS8603</WarningsAsErrors>
+
+		<!-- Spielpfad zentral; bei Bedarf per Directory.Build.props / Kommandozeile überschreiben -->
+		<DvManaged Condition="'$(DvManaged)' == ''">C:\GAMES\Steam\steamapps\common\Derail Valley\DerailValley_Data\Managed</DvManaged>
 	</PropertyGroup>
 
-	<!-- Derail Valley -->
+	<!-- Derail Valley (Private=false: Spiel-DLLs nicht in den Build kopieren) -->
 	<ItemGroup>
-		<Reference Include="Assembly-CSharp">
-			<HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\Assembly-CSharp.dll</HintPath>
-		</Reference>
-		<Reference Include="DV.ThingTypes">
-			<HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\DV.ThingTypes.dll</HintPath>
-		</Reference>
-		<Reference Include="DV.Utils">
-			<HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\DV.Utils.dll</HintPath>
-		</Reference>
-		<Reference Include="DV.Common">
-			<HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\DV.Common.dll</HintPath>
-		</Reference>
-		<Reference Include="DV.BrakeSystem">
-			<HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\DV.BrakeSystem.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.IMGUIModule">
-			<HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
-		</Reference>
-		<Reference Include="Newtonsoft.Json">
-			<HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\Newtonsoft.Json.dll</HintPath>
-		</Reference>
-		<Reference Include="WorldStreamer">
-			<HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\WorldStreamer.dll</HintPath>
-		</Reference>
-		<Reference Include="DV.TerrainSystem">
-			<HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\DV.TerrainSystem.dll</HintPath>
-		</Reference>
+		<Reference Include="Assembly-CSharp"><HintPath>$(DvManaged)\Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+		<Reference Include="DV.ThingTypes"><HintPath>$(DvManaged)\DV.ThingTypes.dll</HintPath><Private>false</Private></Reference>
+		<Reference Include="DV.Utils"><HintPath>$(DvManaged)\DV.Utils.dll</HintPath><Private>false</Private></Reference>
+		<Reference Include="DV.Common"><HintPath>$(DvManaged)\DV.Common.dll</HintPath><Private>false</Private></Reference>
+		<Reference Include="DV.Localization"><HintPath>$(DvManaged)\DV.Localization.dll</HintPath><Private>false</Private></Reference>
+		<Reference Include="Newtonsoft.Json"><HintPath>$(DvManaged)\Newtonsoft.Json.dll</HintPath><Private>false</Private></Reference>
+		<Reference Include="WorldStreamer"><HintPath>$(DvManaged)\WorldStreamer.dll</HintPath><Private>false</Private></Reference>
 	</ItemGroup>
 
 	<!-- Unity -->
 	<ItemGroup>
-		<Reference Include="UnityEngine" >
-		  <HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\UnityEngine.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.UI" >
-		  <HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\UnityEngine.UI.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.CoreModule" >
-		  <HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.PhysicsModule">
-		  <HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
-		</Reference>
-		<Reference Include="Unity.TextMeshPro">
-		  <HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\Unity.TextMeshPro.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.UIModule">
-			<HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\UnityEngine.UIModule.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.TerrainModule">
-			<HintPath>S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed\UnityEngine\UnityEngine.TerrainModule.dll</HintPath>
-		</Reference>
+		<Reference Include="UnityEngine"><HintPath>$(DvManaged)\UnityEngine.dll</HintPath><Private>false</Private></Reference>
+		<Reference Include="UnityEngine.CoreModule"><HintPath>$(DvManaged)\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+		<Reference Include="UnityEngine.IMGUIModule"><HintPath>$(DvManaged)\UnityEngine.IMGUIModule.dll</HintPath><Private>false</Private></Reference>
+		<Reference Include="UnityEngine.AudioModule"><HintPath>$(DvManaged)\UnityEngine.AudioModule.dll</HintPath><Private>false</Private></Reference>
+		<Reference Include="UnityEngine.TextRenderingModule"><HintPath>$(DvManaged)\UnityEngine.TextRenderingModule.dll</HintPath><Private>false</Private></Reference>
+		<Reference Include="UnityEngine.PhysicsModule"><HintPath>$(DvManaged)\UnityEngine.PhysicsModule.dll</HintPath><Private>false</Private></Reference>
+		<Reference Include="UnityEngine.UI"><HintPath>$(DvManaged)\UnityEngine.UI.dll</HintPath><Private>false</Private></Reference>
+		<Reference Include="UnityEngine.UIModule"><HintPath>$(DvManaged)\UnityEngine.UIModule.dll</HintPath><Private>false</Private></Reference>
+		<Reference Include="Unity.TextMeshPro"><HintPath>$(DvManaged)\Unity.TextMeshPro.dll</HintPath><Private>false</Private></Reference>
 	</ItemGroup>
 
 	<!-- Mod Loader -->
@@ -70,8 +41,15 @@
 
 	<!-- Null Checking -->
 	<ItemGroup>
-		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 		<PackageReference Include="Nullable" Version="1.3.1" PrivateAssets="all" />
+	</ItemGroup>
+
+	<!-- Multiplayer-Anbindung zuerst bauen (landet ebenfalls in ../build/); KEIN Assembly-Verweis -->
+	<ItemGroup>
+		<ProjectReference Include="..\LongerLoadingDelay.Multiplayer\LongerLoadingDelay.Multiplayer.csproj">
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<Private>false</Private>
+		</ProjectReference>
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">

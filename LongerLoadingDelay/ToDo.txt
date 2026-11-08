@@ -1,0 +1,12 @@
+Absicherung einbauen:
+
+CarDone darf niemals reduziert werden!
+
+Im Updater muss die vanilla abfrage rein, ob sich der aktive task gerade bewegt, wenn ja alles abbrechen!
+Wenn aktiver Task nicht gefunden werden kann? ABBRECHEN!
+
+Abgebrochene Sequenzen sollen im Savegame zu "waiting" werden!
+
+Timer muss sofort stoppen und auf den Wert zurückgesetzt werden, Jobcars-CarsDone x CarDelay
+
+Sequenz starten, wenn es keine active oder done gibt, soll die erste waiting beginnen!
