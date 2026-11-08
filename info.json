@@ -1,11 +1,12 @@
 {
 	"Id": "LongerLoadingDelay",
-	"Version": "1.05.0",
+	"Version": "2.00.0",
 	"DisplayName": "LongerLoadingDelay",
 	"Author": "CJ187",
 	"Credits": "Coookie, NotAnOption and ChatGPT",
 	"EntryMethod": "LongerLoadingDelay.Main.Load",
 	"ManagerVersion": "0.27.2",
+	"LoadAfter": [ "Multiplayer" ],
 	"HomePage": "https://www.nexusmods.com/derailvalley/mods/1196",
 	"Repository": "https://raw.githubusercontent.com/gercj187/LongerLoadingDelay/refs/heads/main/repository.json"
 }
