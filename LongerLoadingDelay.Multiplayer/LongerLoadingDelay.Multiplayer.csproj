@@ -12,7 +12,7 @@
 		<LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>
 
-		<DvManaged Condition="'$(DvManaged)' == ''">C:\GAMES\Steam\steamapps\common\Derail Valley\DerailValley_Data\Managed</DvManaged>
+		<DvManaged Condition="'$(DvManaged)' == ''">S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed</DvManaged>
 	</PropertyGroup>
 
 	<ItemGroup>
