@@ -59,6 +59,7 @@ namespace LongerLoadingDelay
 		[NonSerialized] public float StableFor;
 		[NonSerialized] public float MissingJobFor;
 		[NonSerialized] public double FinishHint = -1;	// exakter Fertig-Zeitpunkt aus dem letzten Arbeits-Tick
+		[NonSerialized] public float BadFor;			// Sekunden mit bewegten/fehlenden Wagen (Abbruch erst nach InterruptAfter)
 		[NonSerialized] public float GoneFor;			// Sekunden ohne Wagen am Gleis (→ abmelden)
 
 		public double TotalWork => JobCars * DelaySeconds;

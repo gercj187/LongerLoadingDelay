@@ -7,7 +7,7 @@
 		<WarningsAsErrors>CS8600;CS8602;CS8603</WarningsAsErrors>
 
 		<!-- Spielpfad zentral; bei Bedarf per Directory.Build.props / Kommandozeile überschreiben -->
-		<DvManaged Condition="'$(DvManaged)' == ''">C:\GAMES\Steam\steamapps\common\Derail Valley\DerailValley_Data\Managed</DvManaged>
+		<DvManaged Condition="'$(DvManaged)' == ''">S:\SteamLibrary\steamapps\common\Derail Valley\DerailValley_Data\Managed</DvManaged>
 	</PropertyGroup>
 
 	<!-- Derail Valley (Private=false: Spiel-DLLs nicht in den Build kopieren) -->
@@ -17,6 +17,7 @@
 		<Reference Include="DV.Utils"><HintPath>$(DvManaged)\DV.Utils.dll</HintPath><Private>false</Private></Reference>
 		<Reference Include="DV.Common"><HintPath>$(DvManaged)\DV.Common.dll</HintPath><Private>false</Private></Reference>
 		<Reference Include="DV.Localization"><HintPath>$(DvManaged)\DV.Localization.dll</HintPath><Private>false</Private></Reference>
+		<Reference Include="DV.Inventory"><HintPath>$(DvManaged)\DV.Inventory.dll</HintPath><Private>false</Private></Reference>
 		<Reference Include="Newtonsoft.Json"><HintPath>$(DvManaged)\Newtonsoft.Json.dll</HintPath><Private>false</Private></Reference>
 		<Reference Include="WorldStreamer"><HintPath>$(DvManaged)\WorldStreamer.dll</HintPath><Private>false</Private></Reference>
 	</ItemGroup>

@@ -13,6 +13,16 @@ namespace LongerLoadingDelay
 		{
 			langs["bg"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "Максимална такса престой",
+				["tip.idle.max"] = "Горна граница на удръжката за престой. В момента най-много -{0} %, достигната след около {1} игрови часа престой (вкл. свободното време).",
+				["gui.radioall"] = "Показване на всички задачи (мултиплейър)",
+				["tip.radioall"] = "<b>Показване на всички задачи</b>\nИзкл.: в мултиплейър списъкът в радиостанцията показва само вашите задачи – тези, чиято книжка е в ръката ви, в инвентара или в склада.\nВкл.: задачите на всички играчи.\n\nВ самостоятелна игра всички задачи и без това са ваши.",
+				["radio.title"] = "СТАТУС ТОВАРЕНЕ",
+				["radio.none"] = "Няма активно товарене или разтоварване.",
+				["radio.more"] = "+{0} още",
+				["radio.next"] = "СЛЕДВАЩА СТР.",
+				["gui.radiostatus"] = "Статус на товаренето в радиостанцията",
+				["tip.radiostatus"] = "<b>Статус на товаренето в радиостанцията</b>\nОтделен режим на радиостанцията със списък на всички текущи товарения:\nколовоз -> задача   час на завършване\n\n• Същите стойности като на екраните на машините\n• Спусък: следваща страница (при по-дълъг списък)\n• A / B: смяна на режима както обикновено",
 				["title.paused"] = "ПОЧИВКА ДО {0}",
 				["title.interrupted"] = "ПРОЦЕСЪТ Е ПРЕКЪСНАТ",
 				["title.done.load"] = "ТОВАРЕНЕТО Е ЗАВЪРШЕНО",
@@ -105,6 +115,16 @@ namespace LongerLoadingDelay
 
 			langs["cs"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "Maximální stojné",
+				["tip.idle.max"] = "Horní hranice srážky za stání. Nyní nejvýše -{0} %, dosaženo asi po {1} herních hodinách stání (vč. volné doby).",
+				["gui.radioall"] = "Zobrazit všechny zakázky (multiplayer)",
+				["tip.radioall"] = "<b>Zobrazit všechny zakázky</b>\nVyp.: v multiplayeru ukazuje seznam ve vysílačce jen tvé zakázky – ty, jejichž zakázkový list máš v ruce, v inventáři nebo ve skladu.\nZap.: zakázky všech hráčů.\n\nV singleplayeru jsou všechny zakázky stejně tvoje.",
+				["radio.title"] = "STAV NAKLÁDKY",
+				["radio.none"] = "Žádná probíhající nakládka ani vykládka.",
+				["radio.more"] = "+{0} další",
+				["radio.next"] = "DALŠÍ STRANA",
+				["gui.radiostatus"] = "Stav nakládky ve vysílačce",
+				["tip.radiostatus"] = "<b>Stav nakládky ve vysílačce</b>\nVlastní režim vysílačky se seznamem všech probíhajících nakládek:\nkolej -> zakázka   čas dokončení\n\n• Stejné hodnoty jako na displejích strojů\n• Spoušť: další strana (u delšího seznamu)\n• A / B: přepínání režimů jako obvykle",
 				["title.paused"] = "PŘESTÁVKA DO {0}",
 				["title.interrupted"] = "PROCES PŘERUŠEN",
 				["title.done.load"] = "NAKLÁDKA DOKONČENA",
@@ -197,6 +217,16 @@ namespace LongerLoadingDelay
 
 			langs["da"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "Maksimale liggepenge",
+				["tip.idle.max"] = "Øvre grænse for fradraget for liggepenge. Nu højst -{0} %, nået efter ca. {1} spiltimers ståtid (inkl. fri tid).",
+				["gui.radioall"] = "Vis alle opgaver (multiplayer)",
+				["tip.radioall"] = "<b>Vis alle opgaver</b>\nFra: i multiplayer viser listen i radioen kun dine egne opgaver – dem, hvis opgavehæfte du har i hånden, i inventaret eller på lageret.\nTil: alle spilleres opgaver.\n\nI singleplayer er alle opgaver alligevel dine.",
+				["radio.title"] = "LÆSSESTATUS",
+				["radio.none"] = "Ingen aktiv læsning eller losning.",
+				["radio.more"] = "+{0} flere",
+				["radio.next"] = "NÆSTE SIDE",
+				["gui.radiostatus"] = "Læssestatus i radioen",
+				["tip.radiostatus"] = "<b>Læssestatus i radioen</b>\nEgen radiotilstand med en liste over alle igangværende læsninger:\nspor -> opgave   færdigtid\n\n• Samme værdier som på maskinernes displays\n• Aftrækker: næste side (ved længere liste)\n• A / B: skift tilstand som normalt",
 				["title.paused"] = "PAUSE TIL {0}",
 				["title.interrupted"] = "PROCES AFBRUDT",
 				["title.done.load"] = "LÆSNING FÆRDIG",
@@ -289,6 +319,16 @@ namespace LongerLoadingDelay
 
 			langs["es"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "Estadía máxima",
+				["tip.idle.max"] = "Límite superior de la deducción por estadía. Ahora como máximo -{0} %, alcanzado tras unas {1} horas de juego de estancia (incl. tiempo libre).",
+				["gui.radioall"] = "Mostrar todos los trabajos (multijugador)",
+				["tip.radioall"] = "<b>Mostrar todos los trabajos</b>\nDesactivado: en multijugador la lista de la radio solo muestra tus trabajos, aquellos cuyo cuaderno tienes en la mano, en el inventario o en el almacén.\nActivado: los trabajos de todos los jugadores.\n\nEn un jugador todos los trabajos son tuyos.",
+				["radio.title"] = "ESTADO DE CARGA",
+				["radio.none"] = "No hay cargas ni descargas activas.",
+				["radio.more"] = "+{0} más",
+				["radio.next"] = "PÁG. SIGUIENTE",
+				["gui.radiostatus"] = "Estado de carga en la radio",
+				["tip.radiostatus"] = "<b>Estado de carga en la radio</b>\nAñade un modo de radio con la lista de todas las cargas en curso:\nvía -> trabajo   hora de fin\n\n• Mismos valores que en las pantallas de las máquinas\n• Gatillo: página siguiente (si la lista es larga)\n• A / B: cambiar de modo como siempre",
 				["title.paused"] = "PAUSA HASTA LAS {0}",
 				["title.interrupted"] = "PROCESO INTERRUMPIDO",
 				["title.done.load"] = "CARGA COMPLETADA",
@@ -381,6 +421,16 @@ namespace LongerLoadingDelay
 
 			langs["fi"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "Enimmäisseisontamaksu",
+				["tip.idle.max"] = "Seisontamaksun vähennyksen yläraja. Nyt enintään -{0} %, saavutetaan noin {1} pelitunnin seisonnan jälkeen (vapaa aika mukaan lukien).",
+				["gui.radioall"] = "Näytä kaikki tehtävät (moninpeli)",
+				["tip.radioall"] = "<b>Näytä kaikki tehtävät</b>\nPois: moninpelissä radion luettelo näyttää vain omat tehtäväsi – ne, joiden tehtäväkirja on kädessäsi, inventaariossasi tai varastossasi.\nPäällä: kaikkien pelaajien tehtävät.\n\nYksinpelissä kaikki tehtävät ovat joka tapauksessa sinun.",
+				["radio.title"] = "LASTAUSTILA",
+				["radio.none"] = "Ei käynnissä olevia lastauksia tai purkuja.",
+				["radio.more"] = "+{0} lisää",
+				["radio.next"] = "SEUR. SIVU",
+				["gui.radiostatus"] = "Lastaustila radiossa",
+				["tip.radiostatus"] = "<b>Lastaustila radiossa</b>\nOma radiotila, jossa on luettelo kaikista käynnissä olevista lastauksista:\nraide -> tehtävä   valmistumisaika\n\n• Samat arvot kuin koneiden näytöissä\n• Liipaisin: seuraava sivu (pidemmässä luettelossa)\n• A / B: tilan vaihto tavalliseen tapaan",
 				["title.paused"] = "TAUKO KLO {0} ASTI",
 				["title.interrupted"] = "TOIMINTO KESKEYTETTY",
 				["title.done.load"] = "LASTAUS VALMIS",
@@ -473,6 +523,16 @@ namespace LongerLoadingDelay
 
 			langs["fr"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "Frais de stationnement maximum",
+				["tip.idle.max"] = "Plafond de la déduction pour stationnement. Actuellement au plus -{0} %, atteint après environ {1} heures de jeu de stationnement (temps gratuit compris).",
+				["gui.radioall"] = "Afficher toutes les missions (multijoueur)",
+				["tip.radioall"] = "<b>Afficher toutes les missions</b>\nDésactivé : en multijoueur, la liste de la radio n'affiche que vos missions – celles dont vous avez le carnet en main, dans l'inventaire ou dans le stockage.\nActivé : les missions de tous les joueurs.\n\nEn solo, toutes les missions sont de toute façon les vôtres.",
+				["radio.title"] = "ÉTAT CHARGEMENT",
+				["radio.none"] = "Aucun chargement ou déchargement en cours.",
+				["radio.more"] = "+{0} autres",
+				["radio.next"] = "PAGE SUIVANTE",
+				["gui.radiostatus"] = "État du chargement dans la radio",
+				["tip.radiostatus"] = "<b>État du chargement dans la radio</b>\nAjoute un mode radio avec la liste de tous les chargements en cours :\nvoie -> mission   heure de fin\n\n• Mêmes valeurs que sur les écrans des machines\n• Gâchette : page suivante (si la liste est longue)\n• A / B : changer de mode comme d'habitude",
 				["title.paused"] = "PAUSE JUSQU'À {0}",
 				["title.interrupted"] = "OPÉRATION INTERROMPUE",
 				["title.done.load"] = "CHARGEMENT TERMINÉ",
@@ -565,6 +625,16 @@ namespace LongerLoadingDelay
 
 			langs["hi"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "अधिकतम विलंब शुल्क",
+				["tip.idle.max"] = "विलंब शुल्क कटौती की ऊपरी सीमा। अभी अधिकतम -{0}%, लगभग {1} गेम घंटे ठहराव के बाद पहुँचती है (मुफ़्त समय सहित)।",
+				["gui.radioall"] = "सभी कार्य दिखाएँ (मल्टीप्लेयर)",
+				["tip.radioall"] = "<b>सभी कार्य दिखाएँ</b>\nबंद: मल्टीप्लेयर में रेडियो सूची केवल आपके अपने कार्य दिखाती है – जिनकी कार्य पुस्तिका आपके हाथ, इन्वेंटरी या भंडार में है।\nचालू: सभी खिलाड़ियों के कार्य।\n\nसिंगल प्लेयर में सभी कार्य वैसे भी आपके हैं।",
+				["radio.title"] = "लोडिंग स्थिति",
+				["radio.none"] = "कोई सक्रिय लोडिंग या अनलोडिंग नहीं।",
+				["radio.more"] = "+{0} और",
+				["radio.next"] = "अगला पृष्ठ",
+				["gui.radiostatus"] = "रेडियो में लोडिंग स्थिति",
+				["tip.radiostatus"] = "<b>रेडियो में लोडिंग स्थिति</b>\nएक अलग रेडियो मोड जिसमें सभी चालू लोडिंग की सूची होती है:\nट्रैक -> कार्य   पूर्ण होने का समय\n\n• मशीन की स्क्रीन जैसे ही मान\n• ट्रिगर: अगला पृष्ठ (लंबी सूची होने पर)\n• A / B: हमेशा की तरह मोड बदलें",
 				["title.paused"] = "{0} तक विराम",
 				["title.interrupted"] = "प्रक्रिया रुकी",
 				["title.done.load"] = "लोडिंग पूरी",
@@ -657,6 +727,16 @@ namespace LongerLoadingDelay
 
 			langs["hu"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "Maximális állásdíj",
+				["tip.idle.max"] = "Az állásdíj-levonás felső határa. Jelenleg legfeljebb -{0} %, kb. {1} játékóra állás után érhető el (szabad idővel együtt).",
+				["gui.radioall"] = "Összes megbízás mutatása (többjátékos)",
+				["tip.radioall"] = "<b>Összes megbízás mutatása</b>\nKi: többjátékos módban a rádió listája csak a saját megbízásaidat mutatja – amelyek füzete a kezedben, a leltáradban vagy a raktáradban van.\nBe: az összes játékos megbízásai.\n\nEgyjátékos módban amúgy is minden megbízás a tiéd.",
+				["radio.title"] = "RAKODÁSI ÁLLAPOT",
+				["radio.none"] = "Nincs folyamatban lévő rakodás vagy kirakodás.",
+				["radio.more"] = "+{0} további",
+				["radio.next"] = "KÖV. OLDAL",
+				["gui.radiostatus"] = "Rakodási állapot a rádión",
+				["tip.radiostatus"] = "<b>Rakodási állapot a rádión</b>\nSaját rádiómód az összes folyamatban lévő rakodás listájával:\nvágány -> megbízás   befejezési idő\n\n• Ugyanazok az értékek, mint a gépek kijelzőin\n• Ravasz: következő oldal (hosszabb listánál)\n• A / B: módváltás a szokásos módon",
 				["title.paused"] = "SZÜNET {0}-IG",
 				["title.interrupted"] = "FOLYAMAT MEGSZAKÍTVA",
 				["title.done.load"] = "RAKODÁS KÉSZ",
@@ -749,6 +829,16 @@ namespace LongerLoadingDelay
 
 			langs["it"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "Sosta massima",
+				["tip.idle.max"] = "Limite massimo della detrazione per sosta. Ora al massimo -{0} %, raggiunto dopo circa {1} ore di gioco di sosta (tempo gratuito incluso).",
+				["gui.radioall"] = "Mostra tutti i lavori (multigiocatore)",
+				["tip.radioall"] = "<b>Mostra tutti i lavori</b>\nDisattivato: in multigiocatore l'elenco della radio mostra solo i tuoi lavori, quelli di cui hai il libretto in mano, nell'inventario o nel deposito.\nAttivato: i lavori di tutti i giocatori.\n\nIn giocatore singolo tutti i lavori sono comunque tuoi.",
+				["radio.title"] = "STATO CARICO",
+				["radio.none"] = "Nessun carico o scarico in corso.",
+				["radio.more"] = "+{0} altri",
+				["radio.next"] = "PAGINA SUCC.",
+				["gui.radiostatus"] = "Stato del carico nella radio",
+				["tip.radiostatus"] = "<b>Stato del carico nella radio</b>\nAggiunge una modalità radio con l'elenco di tutti i carichi in corso:\nbinario -> lavoro   ora di fine\n\n• Stessi valori dei display delle macchine\n• Grilletto: pagina successiva (se l'elenco è lungo)\n• A / B: cambia modalità come sempre",
 				["title.paused"] = "PAUSA FINO ALLE {0}",
 				["title.interrupted"] = "OPERAZIONE INTERROTTA",
 				["title.done.load"] = "CARICO COMPLETATO",
@@ -841,6 +931,16 @@ namespace LongerLoadingDelay
 
 			langs["ja"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "滞留料の上限",
+				["tip.idle.max"] = "滞留料による差し引きの上限です。現在は最大 -{0}% で、約 {1} ゲーム時間の停留（無料時間を含む）で達します。",
+				["gui.radioall"] = "すべてのジョブを表示（マルチプレイ）",
+				["tip.radioall"] = "<b>すべてのジョブを表示</b>\nオフ：マルチプレイでは無線機の一覧に自分のジョブだけを表示します（ジョブ冊子を手・インベントリ・倉庫に持っているもの）。\nオン：全プレイヤーのジョブを表示します。\n\nシングルプレイではすべてのジョブが自分のものです。",
+				["radio.title"] = "積み降ろし状況",
+				["radio.none"] = "進行中の積み降ろしはありません。",
+				["radio.more"] = "ほか {0} 件",
+				["radio.next"] = "次のページ",
+				["gui.radiostatus"] = "無線機に積み降ろし状況を表示",
+				["tip.radiostatus"] = "<b>無線機に積み降ろし状況を表示</b>\n進行中のすべての積み降ろしを一覧表示する無線機モードを追加します：\n線路 -> ジョブ   完了時刻\n\n• 値は機械の表示と同じです\n• トリガー：次のページ（一覧が長い場合）\n• A / B：いつも通りモードを切り替え",
 				["title.paused"] = "{0} まで休憩",
 				["title.interrupted"] = "作業中断",
 				["title.done.load"] = "積み込み完了",
@@ -933,6 +1033,16 @@ namespace LongerLoadingDelay
 
 			langs["ko"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "최대 체류료",
+				["tip.idle.max"] = "체류료 공제의 상한입니다. 현재 최대 -{0}%이며, 약 {1}게임 시간 정차 후 도달합니다(무료 시간 포함).",
+				["gui.radioall"] = "모든 작업 표시(멀티플레이)",
+				["tip.radioall"] = "<b>모든 작업 표시</b>\n끔: 멀티플레이에서 무전기 목록에 내 작업만 표시합니다(작업 책자를 손, 인벤토리 또는 창고에 가진 작업).\n켬: 모든 플레이어의 작업을 표시합니다.\n\n싱글플레이에서는 어차피 모든 작업이 내 것입니다.",
+				["radio.title"] = "적재 상태",
+				["radio.none"] = "진행 중인 적재·하역이 없습니다.",
+				["radio.more"] = "외 {0}건",
+				["radio.next"] = "다음 페이지",
+				["gui.radiostatus"] = "무전기에 적재 상태 표시",
+				["tip.radiostatus"] = "<b>무전기에 적재 상태 표시</b>\n진행 중인 모든 적재 작업 목록을 보여주는 무전기 모드를 추가합니다:\n선로 -> 작업   완료 시각\n\n• 값은 기계 화면과 같습니다\n• 방아쇠: 다음 페이지(목록이 길 때)\n• A / B: 평소처럼 모드 전환",
 				["title.paused"] = "{0}까지 휴식",
 				["title.interrupted"] = "작업 중단됨",
 				["title.done.load"] = "적재 완료",
@@ -1025,6 +1135,16 @@ namespace LongerLoadingDelay
 
 			langs["nl"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "Maximaal staangeld",
+				["tip.idle.max"] = "Bovengrens voor de staangeldinhouding. Nu maximaal -{0} %, bereikt na ongeveer {1} speeluren staantijd (incl. vrije tijd).",
+				["gui.radioall"] = "Alle opdrachten tonen (multiplayer)",
+				["tip.radioall"] = "<b>Alle opdrachten tonen</b>\nUit: in multiplayer toont de lijst in de portofoon alleen je eigen opdrachten – waarvan je het opdrachtboekje in de hand, in je inventaris of in je opslag hebt.\nAan: de opdrachten van alle spelers.\n\nIn singleplayer zijn alle opdrachten sowieso van jou.",
+				["radio.title"] = "LAADSTATUS",
+				["radio.none"] = "Geen actieve laad- of losopdrachten.",
+				["radio.more"] = "+{0} meer",
+				["radio.next"] = "VOLGENDE PAGINA",
+				["gui.radiostatus"] = "Laadstatus in de portofoon",
+				["tip.radiostatus"] = "<b>Laadstatus in de portofoon</b>\nEigen portofoonmodus met een lijst van alle lopende laadopdrachten:\nspoor -> opdracht   eindtijd\n\n• Dezelfde waarden als op de displays van de machines\n• Trekker: volgende pagina (bij een langere lijst)\n• A / B: zoals altijd van modus wisselen",
 				["title.paused"] = "PAUZE TOT {0}",
 				["title.interrupted"] = "PROCES ONDERBROKEN",
 				["title.done.load"] = "LADEN VOLTOOID",
@@ -1117,6 +1237,16 @@ namespace LongerLoadingDelay
 
 			langs["no"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "Maksimale liggepenger",
+				["tip.idle.max"] = "Øvre grense for trekket for liggepenger. Nå maks -{0} %, nådd etter omtrent {1} spilltimer ståtid (inkl. fri tid).",
+				["gui.radioall"] = "Vis alle oppdrag (flerspiller)",
+				["tip.radioall"] = "<b>Vis alle oppdrag</b>\nAv: i flerspiller viser listen i radioen bare dine egne oppdrag – de du har oppdragsheftet til i hånden, i inventaret eller på lageret.\nPå: oppdragene til alle spillere.\n\nI enspiller er alle oppdrag uansett dine.",
+				["radio.title"] = "LASTESTATUS",
+				["radio.none"] = "Ingen pågående lasting eller lossing.",
+				["radio.more"] = "+{0} til",
+				["radio.next"] = "NESTE SIDE",
+				["gui.radiostatus"] = "Lastestatus i radioen",
+				["tip.radiostatus"] = "<b>Lastestatus i radioen</b>\nEgen radiomodus med en liste over alle pågående lastinger:\nspor -> oppdrag   ferdigtid\n\n• Samme verdier som på maskinenes displayer\n• Avtrekker: neste side (ved lengre liste)\n• A / B: bytt modus som vanlig",
 				["title.paused"] = "PAUSE TIL {0}",
 				["title.interrupted"] = "PROSESS AVBRUTT",
 				["title.done.load"] = "LASTING FERDIG",
@@ -1209,6 +1339,16 @@ namespace LongerLoadingDelay
 
 			langs["pl"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "Maksymalne postojowe",
+				["tip.idle.max"] = "Górny limit potrącenia za postój. Obecnie maksymalnie -{0} %, osiągane po około {1} godzinach gry postoju (z czasem wolnym).",
+				["gui.radioall"] = "Pokaż wszystkie zlecenia (gra wieloosobowa)",
+				["tip.radioall"] = "<b>Pokaż wszystkie zlecenia</b>\nWył.: w grze wieloosobowej lista w radiotelefonie pokazuje tylko Twoje zlecenia – te, których książeczkę masz w ręce, w ekwipunku lub w magazynie.\nWł.: zlecenia wszystkich graczy.\n\nW grze jednoosobowej wszystkie zlecenia i tak są Twoje.",
+				["radio.title"] = "STAN ŁADUNKU",
+				["radio.none"] = "Brak aktywnych załadunków i rozładunków.",
+				["radio.more"] = "+{0} więcej",
+				["radio.next"] = "NASTĘPNA STRONA",
+				["gui.radiostatus"] = "Stan ładunku w radiotelefonie",
+				["tip.radiostatus"] = "<b>Stan ładunku w radiotelefonie</b>\nWłasny tryb radiotelefonu z listą wszystkich trwających ładowań:\ntor -> zlecenie   godzina końca\n\n• Te same wartości co na ekranach maszyn\n• Spust: następna strona (przy dłuższej liście)\n• A / B: zmiana trybu jak zwykle",
 				["title.paused"] = "PRZERWA DO {0}",
 				["title.interrupted"] = "PROCES PRZERWANY",
 				["title.done.load"] = "ZAŁADUNEK ZAKOŃCZONY",
@@ -1301,6 +1441,16 @@ namespace LongerLoadingDelay
 
 			langs["pt-BR"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "Estadia máxima",
+				["tip.idle.max"] = "Limite máximo do desconto por estadia. Atualmente no máximo -{0} %, atingido após cerca de {1} horas de jogo parado (incl. tempo livre).",
+				["gui.radioall"] = "Mostrar todos os serviços (multijogador)",
+				["tip.radioall"] = "<b>Mostrar todos os serviços</b>\nDesligado: no multijogador a lista do rádio mostra só os seus serviços – aqueles cujo caderno você tem na mão, no inventário ou no armazém.\nLigado: os serviços de todos os jogadores.\n\nNo modo solo todos os serviços são seus.",
+				["radio.title"] = "STATUS DE CARGA",
+				["radio.none"] = "Nenhuma carga ou descarga ativa.",
+				["radio.more"] = "+{0} mais",
+				["radio.next"] = "PRÓXIMA PÁGINA",
+				["gui.radiostatus"] = "Status de carga no rádio",
+				["tip.radiostatus"] = "<b>Status de carga no rádio</b>\nModo de rádio próprio com a lista de todas as cargas em andamento:\nvia -> serviço   hora de término\n\n• Os mesmos valores das telas das máquinas\n• Gatilho: próxima página (se a lista for longa)\n• A / B: trocar de modo como sempre",
 				["title.paused"] = "PAUSA ATÉ {0}",
 				["title.interrupted"] = "OPERAÇÃO INTERROMPIDA",
 				["title.done.load"] = "CARREGAMENTO CONCLUÍDO",
@@ -1393,6 +1543,16 @@ namespace LongerLoadingDelay
 
 			langs["pt"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "Estadia máxima",
+				["tip.idle.max"] = "Limite máximo da dedução por estadia. Atualmente no máximo -{0} %, atingido após cerca de {1} horas de jogo parado (incl. tempo livre).",
+				["gui.radioall"] = "Mostrar todos os trabalhos (multijogador)",
+				["tip.radioall"] = "<b>Mostrar todos os trabalhos</b>\nDesligado: no multijogador a lista do rádio só mostra os seus trabalhos – aqueles cujo caderno tem na mão, no inventário ou no armazém.\nLigado: os trabalhos de todos os jogadores.\n\nNo modo de um jogador todos os trabalhos são seus.",
+				["radio.title"] = "ESTADO DE CARGA",
+				["radio.none"] = "Nenhuma carga ou descarga ativa.",
+				["radio.more"] = "+{0} mais",
+				["radio.next"] = "PÁGINA SEGUINTE",
+				["gui.radiostatus"] = "Estado de carga no rádio",
+				["tip.radiostatus"] = "<b>Estado de carga no rádio</b>\nModo de rádio próprio com a lista de todas as cargas em curso:\nvia -> trabalho   hora de fim\n\n• Os mesmos valores dos ecrãs das máquinas\n• Gatilho: página seguinte (se a lista for longa)\n• A / B: mudar de modo como sempre",
 				["title.paused"] = "PAUSA ATÉ ÀS {0}",
 				["title.interrupted"] = "OPERAÇÃO INTERROMPIDA",
 				["title.done.load"] = "CARREGAMENTO CONCLUÍDO",
@@ -1485,6 +1645,16 @@ namespace LongerLoadingDelay
 
 			langs["ro"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "Taxă de staționare maximă",
+				["tip.idle.max"] = "Limita superioară a deducerii pentru staționare. Acum cel mult -{0} %, atinsă după aproximativ {1} ore de joc de staționare (incl. timpul liber).",
+				["gui.radioall"] = "Afișează toate sarcinile (multiplayer)",
+				["tip.radioall"] = "<b>Afișează toate sarcinile</b>\nOprit: în multiplayer lista din stația radio arată doar sarcinile tale – cele al căror carnet îl ai în mână, în inventar sau în depozit.\nPornit: sarcinile tuturor jucătorilor.\n\nÎn modul single player toate sarcinile sunt oricum ale tale.",
+				["radio.title"] = "STARE ÎNCĂRCARE",
+				["radio.none"] = "Nicio încărcare sau descărcare activă.",
+				["radio.more"] = "+{0} în plus",
+				["radio.next"] = "PAGINA URM.",
+				["gui.radiostatus"] = "Starea încărcării în stația radio",
+				["tip.radiostatus"] = "<b>Starea încărcării în stația radio</b>\nMod propriu al stației radio cu lista tuturor încărcărilor în curs:\nlinie -> sarcină   ora de finalizare\n\n• Aceleași valori ca pe ecranele mașinilor\n• Trăgaci: pagina următoare (la o listă mai lungă)\n• A / B: schimbă modul ca de obicei",
 				["title.paused"] = "PAUZĂ PÂNĂ LA {0}",
 				["title.interrupted"] = "PROCES ÎNTRERUPT",
 				["title.done.load"] = "ÎNCĂRCARE FINALIZATĂ",
@@ -1577,6 +1747,16 @@ namespace LongerLoadingDelay
 
 			langs["ru"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "Максимальная плата за простой",
+				["tip.idle.max"] = "Верхний предел вычета за простой. Сейчас не более -{0} %, достигается примерно через {1} игровых часов стоянки (с учётом бесплатного времени).",
+				["gui.radioall"] = "Показывать все заказы (мультиплеер)",
+				["tip.radioall"] = "<b>Показывать все заказы</b>\nВыкл.: в мультиплеере список в рации показывает только ваши заказы – те, чья книжка у вас в руке, в инвентаре или на складе.\nВкл.: заказы всех игроков.\n\nВ одиночной игре все заказы и так ваши.",
+				["radio.title"] = "СТАТУС ПОГРУЗКИ",
+				["radio.none"] = "Нет активных погрузок и разгрузок.",
+				["radio.more"] = "+{0} ещё",
+				["radio.next"] = "СЛЕД. СТРАНИЦА",
+				["gui.radiostatus"] = "Статус погрузки в рации",
+				["tip.radiostatus"] = "<b>Статус погрузки в рации</b>\nОтдельный режим рации со списком всех текущих погрузок:\nпуть -> заказ   время окончания\n\n• Те же значения, что на экранах машин\n• Курок: следующая страница (если список длинный)\n• A / B: смена режимов как обычно",
 				["title.paused"] = "ПЕРЕРЫВ ДО {0}",
 				["title.interrupted"] = "ПРОЦЕСС ПРЕРВАН",
 				["title.done.load"] = "ПОГРУЗКА ЗАВЕРШЕНА",
@@ -1669,6 +1849,16 @@ namespace LongerLoadingDelay
 
 			langs["sk"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "Maximálne ležné",
+				["tip.idle.max"] = "Horná hranica zrážky za státie. Teraz najviac -{0} %, dosiahnuté asi po {1} herných hodinách státia (vrátane voľného času).",
+				["gui.radioall"] = "Zobraziť všetky zákazky (multiplayer)",
+				["tip.radioall"] = "<b>Zobraziť všetky zákazky</b>\nVyp.: v multiplayeri ukazuje zoznam vo vysielačke len tvoje zákazky – tie, ktorých zákazkový list máš v ruke, v inventári alebo v sklade.\nZap.: zákazky všetkých hráčov.\n\nV singleplayeri sú všetky zákazky aj tak tvoje.",
+				["radio.title"] = "STAV NAKLÁDKY",
+				["radio.none"] = "Žiadna prebiehajúca nakládka ani vykládka.",
+				["radio.more"] = "+{0} ďalšie",
+				["radio.next"] = "ĎALŠIA STRANA",
+				["gui.radiostatus"] = "Stav nakládky vo vysielačke",
+				["tip.radiostatus"] = "<b>Stav nakládky vo vysielačke</b>\nVlastný režim vysielačky so zoznamom všetkých prebiehajúcich nakládok:\nkoľaj -> zákazka   čas dokončenia\n\n• Rovnaké hodnoty ako na displejoch strojov\n• Spúšť: ďalšia strana (pri dlhšom zozname)\n• A / B: prepínanie režimov ako zvyčajne",
 				["title.paused"] = "PRESTÁVKA DO {0}",
 				["title.interrupted"] = "PROCES PRERUŠENÝ",
 				["title.done.load"] = "NAKLÁDKA DOKONČENÁ",
@@ -1761,6 +1951,16 @@ namespace LongerLoadingDelay
 
 			langs["sv"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "Maximal liggavgift",
+				["tip.idle.max"] = "Övre gräns för avdraget för liggavgift. Nu högst -{0} %, nås efter cirka {1} speltimmars ståtid (inkl. fri tid).",
+				["gui.radioall"] = "Visa alla uppdrag (flerspelarläge)",
+				["tip.radioall"] = "<b>Visa alla uppdrag</b>\nAv: i flerspelarläge visar listan i radion bara dina egna uppdrag – de vars uppdragshäfte du har i handen, i inventariet eller i förrådet.\nPå: alla spelares uppdrag.\n\nI enspelarläge är alla uppdrag ändå dina.",
+				["radio.title"] = "LASTSTATUS",
+				["radio.none"] = "Ingen pågående lastning eller lossning.",
+				["radio.more"] = "+{0} till",
+				["radio.next"] = "NÄSTA SIDA",
+				["gui.radiostatus"] = "Laststatus i radion",
+				["tip.radiostatus"] = "<b>Laststatus i radion</b>\nEget radioläge med en lista över alla pågående lastningar:\nspår -> uppdrag   klartid\n\n• Samma värden som på maskinernas displayer\n• Avtryckare: nästa sida (vid längre lista)\n• A / B: byt läge som vanligt",
 				["title.paused"] = "RAST TILL {0}",
 				["title.interrupted"] = "PROCESS AVBRUTEN",
 				["title.done.load"] = "LASTNING KLAR",
@@ -1853,6 +2053,16 @@ namespace LongerLoadingDelay
 
 			langs["tr"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "Azami bekleme ücreti",
+				["tip.idle.max"] = "Bekleme kesintisinin üst sınırı. Şu an en fazla -%{0}, yaklaşık {1} oyun saati beklemeden sonra ulaşılır (serbest süre dahil).",
+				["gui.radioall"] = "Tüm görevleri göster (çok oyunculu)",
+				["tip.radioall"] = "<b>Tüm görevleri göster</b>\nKapalı: çok oyunculu modda telsiz listesi yalnızca kendi görevlerinizi gösterir – görev defteri elinizde, envanterinizde veya deponuzda olanları.\nAçık: tüm oyuncuların görevleri.\n\nTek oyunculu modda zaten tüm görevler sizindir.",
+				["radio.title"] = "YÜKLEME DURUMU",
+				["radio.none"] = "Etkin yükleme veya boşaltma yok.",
+				["radio.more"] = "+{0} daha",
+				["radio.next"] = "SONRAKİ SAYFA",
+				["gui.radiostatus"] = "Telsizde yükleme durumu",
+				["tip.radiostatus"] = "<b>Telsizde yükleme durumu</b>\nDevam eden tüm yüklemelerin listesini gösteren ayrı bir telsiz modu:\nhat -> görev   bitiş saati\n\n• Makine ekranlarıyla aynı değerler\n• Tetik: sonraki sayfa (liste uzunsa)\n• A / B: her zamanki gibi mod değiştir",
 				["title.paused"] = "{0}'E KADAR MOLA",
 				["title.interrupted"] = "İŞLEM DURDURULDU",
 				["title.done.load"] = "YÜKLEME TAMAMLANDI",
@@ -1945,6 +2155,16 @@ namespace LongerLoadingDelay
 
 			langs["uk"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "Максимальна плата за простій",
+				["tip.idle.max"] = "Верхня межа відрахування за простій. Зараз не більше -{0} %, досягається приблизно через {1} ігрових годин стоянки (з безкоштовним часом).",
+				["gui.radioall"] = "Показувати всі замовлення (мультиплеєр)",
+				["tip.radioall"] = "<b>Показувати всі замовлення</b>\nВимк.: у мультиплеєрі список у рації показує лише ваші замовлення – ті, чия книжка у вас у руці, в інвентарі чи на складі.\nУвімк.: замовлення всіх гравців.\n\nУ одиночній грі всі замовлення й так ваші.",
+				["radio.title"] = "СТАТУС НАВАНТ.",
+				["radio.none"] = "Немає активних навантажень і розвантажень.",
+				["radio.more"] = "+{0} ще",
+				["radio.next"] = "НАСТ. СТОРІНКА",
+				["gui.radiostatus"] = "Статус навантаження в рації",
+				["tip.radiostatus"] = "<b>Статус навантаження в рації</b>\nОкремий режим рації зі списком усіх поточних навантажень:\nколія -> замовлення   час завершення\n\n• Ті самі значення, що на екранах машин\n• Курок: наступна сторінка (якщо список довгий)\n• A / B: зміна режимів як зазвичай",
 				["title.paused"] = "ПЕРЕРВА ДО {0}",
 				["title.interrupted"] = "ПРОЦЕС ПЕРЕРВАНО",
 				["title.done.load"] = "НАВАНТАЖЕННЯ ЗАВЕРШЕНО",
@@ -2037,6 +2257,16 @@ namespace LongerLoadingDelay
 
 			langs["zh-CN"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "滞留费上限",
+				["tip.idle.max"] = "滞留费扣款的上限。当前最多 -{0}%，约停留 {1} 个游戏小时后达到（含免费时间）。",
+				["gui.radioall"] = "显示所有任务（多人游戏）",
+				["tip.radioall"] = "<b>显示所有任务</b>\n关闭：多人游戏中对讲机列表只显示你自己的任务——即任务手册在你手中、背包或仓库里的任务。\n开启：显示所有玩家的任务。\n\n单人游戏中所有任务本来就是你的。",
+				["radio.title"] = "装卸状态",
+				["radio.none"] = "当前没有进行中的装卸。",
+				["radio.more"] = "另有 {0} 项",
+				["radio.next"] = "下一页",
+				["gui.radiostatus"] = "对讲机中的装卸状态",
+				["tip.radiostatus"] = "<b>对讲机中的装卸状态</b>\n新增一个对讲机模式，列出所有进行中的装卸作业：\n轨道 -> 任务   完成时间\n\n• 数值与装卸机屏幕相同\n• 扳机：下一页（列表较长时）\n• A / B：照常切换模式",
 				["title.paused"] = "休息至 {0}",
 				["title.interrupted"] = "作业已中断",
 				["title.done.load"] = "装货完成",
@@ -2129,6 +2359,16 @@ namespace LongerLoadingDelay
 
 			langs["zh-TW"] = new Dictionary<string, string>
 			{
+				["gui.idle.max"] = "滯留費上限",
+				["tip.idle.max"] = "滯留費扣款的上限。目前最多 -{0}%，約停留 {1} 個遊戲小時後達到（含免費時間）。",
+				["gui.radioall"] = "顯示所有任務（多人遊戲）",
+				["tip.radioall"] = "<b>顯示所有任務</b>\n關閉：多人遊戲中無線電清單只顯示你自己的任務——即任務手冊在你手中、背包或倉庫裡的任務。\n開啟：顯示所有玩家的任務。\n\n單人遊戲中所有任務本來就是你的。",
+				["radio.title"] = "裝卸狀態",
+				["radio.none"] = "目前沒有進行中的裝卸。",
+				["radio.more"] = "另有 {0} 項",
+				["radio.next"] = "下一頁",
+				["gui.radiostatus"] = "無線電中的裝卸狀態",
+				["tip.radiostatus"] = "<b>無線電中的裝卸狀態</b>\n新增一個無線電模式，列出所有進行中的裝卸作業：\n軌道 -> 任務   完成時間\n\n• 數值與裝卸機螢幕相同\n• 扳機：下一頁（清單較長時）\n• A / B：照常切換模式",
 				["title.paused"] = "休息至 {0}",
 				["title.interrupted"] = "作業已中斷",
 				["title.done.load"] = "裝貨完成",

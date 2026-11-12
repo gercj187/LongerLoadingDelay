@@ -54,11 +54,14 @@ namespace LongerLoadingDelay
 		// --- Standgeld: fertiger Zug bleibt am Ladegleis stehen ---
 		public bool IdlePenalty = true;
 		public float IdlePenaltyPerHour = 2.5f;		// % pro Spielstunde
+		public float IdleMaxPct = 50f;				// Obergrenze Standgeld in %
 		public float IdleGraceHours = 1f;			// freie Standzeit
 
 		// --- Gleichzeitige Abfertigung ---
 		public bool ParallelProcessing = false;		// mehrere Jobs auf einem Gleis gleichzeitig statt nacheinander
 		public float ParallelFactor = 1.5f;			// Ladezeit-Multiplikator, solange mehrere gleichzeitig laufen
+		public bool RadioLoadStatus = true;
+		public bool RadioShowAllJobs = false;			// Multiplayer: auch Jobs der anderen Spieler			// eigener Funkgerät-Modus "Ladestatus"
 		public bool RadioClock = true;				// Uhrzeit im Funkgerät
 		public bool RadioClock24h = true;			// gilt für Funkgerät und Lademaschine
 		public bool MachineClock = true;			// Uhrzeit in der Kopfzeile der Lademaschine
@@ -81,6 +84,7 @@ namespace LongerLoadingDelay
 			AltTrackPenaltyOccupied = Mathf.Clamp(AltTrackPenaltyOccupied, 0, 100);
 			AltTrackPenaltyFree = Mathf.Clamp(AltTrackPenaltyFree, 0, 100);
 			IdlePenaltyPerHour = Mathf.Clamp(IdlePenaltyPerHour, 0f, 50f);
+			IdleMaxPct = Mathf.Clamp(Mathf.Round(IdleMaxPct / 5f) * 5f, 10f, 100f);
 			IdleGraceHours = Mathf.Clamp(IdleGraceHours, 0f, 24f);
 			PayPerLoadHourPct = Mathf.Clamp(PayPerLoadHourPct, 0f, 500f);
 			Language = "auto";
@@ -209,6 +213,9 @@ namespace LongerLoadingDelay
 			{
 				IdlePenaltyPerHour = StepSlider("   " + Loc.T("gui.idle.rate"), IdlePenaltyPerHour, 0.5f, 10f, 0.5f,
 					"-" + IdlePenaltyPerHour.ToString("0.0") + " % / h", Loc.T("tip.idle.rate"));
+				IdleMaxPct = StepSlider("   " + Loc.T("gui.idle.max"), IdleMaxPct, 10f, 100f, 5f,
+					"max. -" + IdleMaxPct.ToString("0") + " %", Loc.T("tip.idle.max", IdleMaxPct.ToString("0"),
+						(IdleMaxPct / Mathf.Max(0.1f, IdlePenaltyPerHour) + IdleGraceHours).ToString("0.#")));
 				IdleGraceHours = StepSlider("   " + Loc.T("gui.idle.grace"), IdleGraceHours, 0f, 6f, 0.25f,
 					IdleGraceHours.ToString("0.##") + " h", Loc.T("tip.idle.grace"));
 			}
@@ -239,6 +246,9 @@ namespace LongerLoadingDelay
 			// --- Anzeige (immer lokal, auch im Multiplayer) ---
 			GUILayout.BeginVertical("box");
 
+			RadioLoadStatus = Toggle(RadioLoadStatus, " " + Loc.T("gui.radiostatus"), Loc.T("tip.radiostatus"));
+			if (RadioLoadStatus)
+				RadioShowAllJobs = Toggle(RadioShowAllJobs, "    " + Loc.T("gui.radioall"), Loc.T("tip.radioall"));
 			RadioClock = Toggle(RadioClock, " " + Loc.T("gui.radioclock"), Loc.T("tip.radioclock"));
 
 			bool machineClockBefore = MachineClock;
@@ -574,6 +584,7 @@ namespace LongerLoadingDelay
 			w.Write(IdleGraceHours);
 			w.Write(ParallelProcessing);
 			w.Write(ParallelFactor);
+			w.Write(IdleMaxPct);
 		}
 
 		public void ReadGameplay(System.IO.BinaryReader r)
@@ -600,11 +611,14 @@ namespace LongerLoadingDelay
 			IdleGraceHours = r.ReadSingle();
 			ParallelProcessing = r.ReadBoolean();
 			ParallelFactor = r.ReadSingle();
+			IdleMaxPct = r.ReadSingle();
 		}
 
 		// Lokale Anzeige-Einstellungen (gehören dem Spieler, nicht dem Host)
 		public void CopyDisplayPrefsFrom(Settings other)
 		{
+			RadioLoadStatus = other.RadioLoadStatus;
+			RadioShowAllJobs = other.RadioShowAllJobs;
 			RadioClock = other.RadioClock;
 			RadioClock24h = other.RadioClock24h;
 			MachineClock = other.MachineClock;

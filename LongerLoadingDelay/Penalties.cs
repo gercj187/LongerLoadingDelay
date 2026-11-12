@@ -38,7 +38,9 @@ namespace LongerLoadingDelay
 		}
 
 		public bool IsEmpty => AltPct <= 0 && IdlePct <= 0.001f && External.Count == 0;
-		public float TotalPct => Mathf.Clamp(AltPct + IdlePct + ExternalPct, 0f, 100f);
+		// Standgeld ist nach oben begrenzt (Einstellung IdleMaxPct)
+		public float IdleEffective => Mathf.Min(IdlePct, Main.Settings != null ? Main.Settings.IdleMaxPct : 100f);
+		public float TotalPct => Mathf.Clamp(AltPct + IdleEffective + ExternalPct, 0f, 100f);
 	}
 
 	public static class Penalties
@@ -81,7 +83,7 @@ namespace LongerLoadingDelay
 		public static void SetIdle(string jobId, float pct, double idleMinutes)
 		{
 			var p = Get(jobId);
-			p.IdlePct = Mathf.Max(p.IdlePct, pct);
+			p.IdlePct = Mathf.Max(p.IdlePct, Mathf.Min(pct, Main.Settings.IdleMaxPct));
 			p.IdleMinutes = System.Math.Max(p.IdleMinutes, idleMinutes);
 		}
 

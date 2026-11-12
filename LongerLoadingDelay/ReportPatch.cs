@@ -42,8 +42,8 @@ namespace LongerLoadingDelay
 
 			if (p.IdlePct > 0.001f)
 			{
-				longParts.Add(Loc.T("report.idle", Schedule.FormatDuration(p.IdleMinutes), Pct(p.IdlePct)));
-				shortParts.Add(Loc.T("report.short.idle", Pct(p.IdlePct)));
+				longParts.Add(Loc.T("report.idle", Schedule.FormatDuration(p.IdleMinutes), Pct(p.IdleEffective)));
+				shortParts.Add(Loc.T("report.short.idle", Pct(p.IdleEffective)));
 			}
 
 			foreach (var e in p.External.Values)

@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -249,6 +250,11 @@ namespace LongerLoadingDelay
 
 		private static void Tick(double fromAbs, double nowAbs, float dt)
 		{
+			// Ladungs-Optik von Wagen nachziehen, die bearbeitet wurden, während ihr Interior ausgeladen war
+			// (läuft auch beim Multiplayer-Client: dort kommen die Ladungsänderungen vom Host)
+			CargoVisuals.Tick(dt);
+			LoadStatusRadio.EnforceAvailability();
+
 			// Multiplayer-Client: nichts selbst berechnen, nur den Zustand des Hosts anzeigen
 			if (Mp.IsClient)
 			{
@@ -516,9 +522,24 @@ namespace LongerLoadingDelay
 					{
 						if (!allPresent || moving)
 						{
-							Interrupt(seq, moving ? InterruptReason.Moving : InterruptReason.CarsMissing);
+							// Nicht sofort abbrechen: beim Laden/Entladen der Umgebung (Spieler läuft weg/zurück)
+							// melden Wagen kurz eine Geschwindigkeit oder kein Gleis. Erst wenn es anhält → Abbruch.
+							// Solange pausiert die Arbeit (kein Fortschritt in diesem Tick).
+							seq.BadFor += dt;
+
+							if (seq.BadFor >= InterruptAfter)
+							{
+								if (Main.DebugOn)
+									Main.Log($" {track} [{seq.JobId}] : INTERRUPT after {seq.BadFor:0.0}s – {DescribeProblem(taskBuffer, trackLogic)}");
+
+								Interrupt(seq, moving ? InterruptReason.Moving : InterruptReason.CarsMissing);
+							}
 							break;
 						}
+
+						if (seq.BadFor > 0f && Main.DebugOn)
+							Main.Log($" {track} [{seq.JobId}] : short glitch ignored ({seq.BadFor:0.0}s)");
+						seq.BadFor = 0f;
 
 						anyActive = true;
 
@@ -543,6 +564,7 @@ namespace LongerLoadingDelay
 						while (seq.CarsDone < target && processedThisTick < MaxCarsPerTick)
 						{
 							var car = ProcessOneCar(machine, taskBuffer, seq.IsLoading);
+							CargoVisuals.MarkProcessed(car);
 							if (car == null)
 								break;
 
@@ -645,6 +667,7 @@ namespace LongerLoadingDelay
 			seq.State = SeqState.Interrupted;
 			seq.Reason = reason;
 			seq.StableFor = 0;
+			seq.BadFor = 0;
 
 			// ToDo-Vorgabe: Timer sofort auf (JobCars - CarsDone) × Delay zurück
 			seq.WorkDone = seq.CarsDone * seq.DelaySeconds;
@@ -1330,6 +1353,73 @@ namespace LongerLoadingDelay
 			b.Append('\n');
 		}
 
+		// =========================
+		// ZEILEN EINES GLEISES (für Funkgerät-Anzeige; gleiche Rechnung wie die Tabelle am Display)
+		// =========================
+		public struct TrackRow
+		{
+			public string Job, Cars, Status, Eta;
+			public SeqState State;
+		}
+
+		public static List<TrackRow> GetTrackRows(string track)
+		{
+			var rows = new List<TrackRow>();
+			bool hasClock = GameClock.TryGetNowAbsMinutes(out double nowAbs);
+			bool onBreak = hasClock && Schedule.RateAt(nowAbs) <= 0;
+
+			bool parallel = Main.Settings.ParallelProcessing;
+			double parallelFactor = Mathf.Max(1f, Main.Settings.ParallelFactor);
+			int runningCount = 0;
+			foreach (var s in Sequences)
+				if (s.TrackName == track && s.State == SeqState.Active)
+					runningCount++;
+
+			double queueWork = 0;
+
+			foreach (var seq in Sequences)
+			{
+				if (seq.TrackName != track)
+					continue;
+
+				var row = new TrackRow { Job = seq.JobId, Cars = seq.CarsDone + "/" + seq.JobCars, Status = "", Eta = "", State = seq.State };
+
+				switch (seq.State)
+				{
+					case SeqState.Active:
+					case SeqState.Queued:
+					{
+						bool active = seq.State == SeqState.Active;
+						double needed = parallel
+							? seq.RemainingWork * ((active ? runningCount > 1 : runningCount >= 1) ? parallelFactor : 1.0)
+							: (queueWork += seq.RemainingWork);
+
+						double? finish = hasClock ? Schedule.FinishTime(nowAbs, needed) : null;
+
+						row.Status = !active ? Loc.T("line.queued")
+							: onBreak ? Loc.T("line.break")
+							: finish.HasValue ? RealCountdown(seq, finish.Value - nowAbs) : "";
+						row.Eta = finish.HasValue ? "~ " + EtaText(nowAbs, finish.Value) : "";
+						break;
+					}
+
+					case SeqState.Interrupted:
+						row.Status = Loc.T(seq.Reason == InterruptReason.Moving ? "line.moving.short" : "line.missing.short");
+						break;
+
+					case SeqState.Done:
+						row.Cars = seq.JobCars + "/" + seq.JobCars;
+						row.Status = Loc.T("line.done");
+						row.Eta = seq.FinishedAt >= 0 ? Schedule.FormatClock(seq.FinishedAt) : "";
+						break;
+				}
+
+				rows.Add(row);
+			}
+
+			return rows;
+		}
+
 		private static string EtaText(double nowAbs, double finishAbs)
 		{
 			string t = Schedule.FormatClock(finishAbs);
@@ -1372,7 +1462,7 @@ namespace LongerLoadingDelay
 				}
 
 				if (p != null && p.IdlePct > 0.001f)
-					parts.Add(Loc.T("pen.idle", Schedule.FormatDuration(p.IdleMinutes)) + " -" + p.IdlePct.ToString("0.#") + " %");
+					parts.Add(Loc.T("pen.idle", Schedule.FormatDuration(p.IdleMinutes)) + " -" + p.IdleEffective.ToString("0.#") + " %");
 
 				if (parts.Count > 0)
 					lines.Add("[" + seq.JobId + "] - " + string.Join(" · ", parts));
@@ -1599,6 +1689,34 @@ namespace LongerLoadingDelay
 					return true;
 
 			return false;
+		}
+
+		// Abbruch erst, wenn das Problem so lange ununterbrochen besteht
+		private const float InterruptAfter = 3f;
+
+		// Für das Debug-Log: welcher Wagen ist das Problem?
+		private static string DescribeProblem(List<WarehouseTask> tasks, Track track)
+		{
+			var registry = SingletonBehaviour<TrainCarRegistry>.Instance;
+			var sb = new StringBuilder();
+
+			foreach (var t in tasks)
+			{
+				foreach (var c in t.cars)
+				{
+					float speed = -1f;
+					if (registry != null && registry.logicCarToTrainCar.TryGetValue(c, out var tc) && tc != null)
+						speed = tc.GetAbsSpeed();
+
+					bool onTrack = c.CurrentTrack == track;
+					if (!onTrack || speed > 0.3f)
+						sb.Append(c.ID).Append(" track=").Append(c.CurrentTrack?.ID?.FullID ?? "null")
+						  .Append(" speed=").Append(speed.ToString("0.00", CultureInfo.InvariantCulture))
+						  .Append(speed < 0f ? " (no TrainCar)" : "").Append("; ");
+				}
+			}
+
+			return sb.Length > 0 ? sb.ToString() : "?";
 		}
 
 		private static bool AnyCarMoving(List<WarehouseTask> tasks)
