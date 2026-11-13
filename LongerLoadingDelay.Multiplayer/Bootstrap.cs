@@ -105,6 +105,7 @@ namespace LongerLoadingDelay.Multiplayer
 
 		private static void OnClientStarted(IClient client)
 		{
+			log?.Invoke("client started → listening for host state");
 			client.RegisterPacket<LldStatePacket>(packet =>
 			{
 				// der lokale Client des Hosts wertet nichts aus (Host rechnet selbst)
