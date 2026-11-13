@@ -60,8 +60,9 @@ namespace LongerLoadingDelay
 		// --- Gleichzeitige Abfertigung ---
 		public bool ParallelProcessing = false;		// mehrere Jobs auf einem Gleis gleichzeitig statt nacheinander
 		public float ParallelFactor = 1.5f;			// Ladezeit-Multiplikator, solange mehrere gleichzeitig laufen
-		public bool RadioLoadStatus = true;
-		public bool RadioShowAllJobs = false;			// Multiplayer: auch Jobs der anderen Spieler			// eigener Funkgerät-Modus "Ladestatus"
+		// Funkgerät-Ladestatus: fest an, im Multiplayer alle Jobs (keine Einstellung mehr, gespeicherte Werte werden ignoriert)
+		public bool RadioLoadStatus { get => true; set { } }
+		public bool RadioShowAllJobs { get => true; set { } }
 		public bool RadioClock = true;				// Uhrzeit im Funkgerät
 		public bool RadioClock24h = true;			// gilt für Funkgerät und Lademaschine
 		public bool MachineClock = true;			// Uhrzeit in der Kopfzeile der Lademaschine
@@ -246,9 +247,6 @@ namespace LongerLoadingDelay
 			// --- Anzeige (immer lokal, auch im Multiplayer) ---
 			GUILayout.BeginVertical("box");
 
-			RadioLoadStatus = Toggle(RadioLoadStatus, " " + Loc.T("gui.radiostatus"), Loc.T("tip.radiostatus"));
-			if (RadioLoadStatus)
-				RadioShowAllJobs = Toggle(RadioShowAllJobs, "    " + Loc.T("gui.radioall"), Loc.T("tip.radioall"));
 			RadioClock = Toggle(RadioClock, " " + Loc.T("gui.radioclock"), Loc.T("tip.radioclock"));
 
 			bool machineClockBefore = MachineClock;
@@ -617,8 +615,6 @@ namespace LongerLoadingDelay
 		// Lokale Anzeige-Einstellungen (gehören dem Spieler, nicht dem Host)
 		public void CopyDisplayPrefsFrom(Settings other)
 		{
-			RadioLoadStatus = other.RadioLoadStatus;
-			RadioShowAllJobs = other.RadioShowAllJobs;
 			RadioClock = other.RadioClock;
 			RadioClock24h = other.RadioClock24h;
 			MachineClock = other.MachineClock;

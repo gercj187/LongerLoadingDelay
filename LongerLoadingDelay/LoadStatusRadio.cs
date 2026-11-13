@@ -171,6 +171,7 @@ namespace LongerLoadingDelay
 		// Im Einzelspieler sind alle Jobs die eigenen. Im Multiplayer: Jobs, deren Auftragsheft der Spieler
 		// in der Hand, im Inventar oder im eigenen Lager hat.
 		private static readonly HashSet<string> myJobs = new();
+		private static readonly HashSet<string> seenJobs = new();
 		private static float nextOwnScan;
 
 		private static bool FilterMine => !Main.Settings.RadioShowAllJobs && (Mp.IsHost || Mp.IsClient);
@@ -182,13 +183,18 @@ namespace LongerLoadingDelay
 			nextOwnScan = Time.unscaledTime + 2f;
 
 			myJobs.Clear();
+			seenJobs.Clear();
 
 			try
 			{
-				foreach (var booklet in FindObjectsOfType<JobBooklet>())
+				// FindObjectsOfType findet nur AKTIVE Objekte – Hefte im Inventar sind deaktiviert!
+				// Daher alle geladenen Hefte (auch inaktive), nur Szenen-Objekte (keine Prefabs)
+				foreach (var booklet in Resources.FindObjectsOfTypeAll<JobBooklet>())
 				{
-					if (booklet == null || booklet.job == null)
+					if (booklet == null || booklet.job == null || !booklet.gameObject.scene.IsValid())
 						continue;
+
+					seenJobs.Add(booklet.job.ID);
 
 					var item = booklet.GetComponent<ItemBase>();
 					if (item == null)
@@ -207,6 +213,9 @@ namespace LongerLoadingDelay
 			{
 				Main.Log(" Radio: job owner scan failed: " + e.Message);
 			}
+
+			if (Main.DebugOn)
+				Main.Log($" Radio: booklets found {seenJobs.Count}, mine {myJobs.Count} [{string.Join(", ", myJobs)}]");
 		}
 
 		private int PageCount() => Math.Max(1, (lines.Count + LinesPerPage - 1) / LinesPerPage);
@@ -228,7 +237,9 @@ namespace LongerLoadingDelay
 
 				foreach (var row in LoadingService.GetTrackRows(track))
 				{
-					if (filterMine && !myJobs.Contains(row.Job))
+					// ausblenden nur, wenn das Heft gefunden wurde und NICHT beim Spieler ist
+					// (Jobs ohne auffindbares Heft bleiben sichtbar → Liste nie fälschlich leer)
+					if (filterMine && seenJobs.Contains(row.Job) && !myJobs.Contains(row.Job))
 						continue;
 
 					string right = row.State switch

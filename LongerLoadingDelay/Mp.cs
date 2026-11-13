@@ -29,7 +29,7 @@ namespace LongerLoadingDelay
 		private const string IntegrationDll = "LongerLoadingDelay.Multiplayer.dll";
 		private const string BootstrapTypeName = "LongerLoadingDelay.Multiplayer.Bootstrap";
 
-		private const byte StateVersion = 1;
+		private const byte StateVersion = 2;		// 2: + Lampenzustände
 		private const float BroadcastInterval = 1f;
 
 		private static Func<bool>? isClient, isHost;
@@ -65,32 +65,54 @@ namespace LongerLoadingDelay
 		// =========================
 		// LADEN DER INTEGRATION
 		// =========================
-		public static void Initialize(UnityModManager.ModEntry modEntry)
+		private static int attempts;
+		private static UnityModManager.ModEntry? entry;
+
+		/// <summary>true = fertig (aktiv oder endgültig Einzelspieler), false = später nochmal versuchen</summary>
+		public static bool Initialize(UnityModManager.ModEntry modEntry)
 		{
+			entry = modEntry;
+			attempts++;
+
 			try
 			{
 				var multiplayer = UnityModManager.FindMod(MultiplayerModId);
-				bool apiLoaded = AppDomain.CurrentDomain.GetAssemblies().Any(a => a.GetName().Name == ApiAssemblyName);
-
-				if (multiplayer == null || !multiplayer.Enabled || !apiLoaded)
+				if (multiplayer == null || !multiplayer.Enabled)
 				{
-					Main.Log(" Multiplayer not active → single player mode");
-					return;
+					modEntry.Logger.Log("Multiplayer mod not installed/enabled → single player mode.");
+					return true;
+				}
+
+				bool apiLoaded = AppDomain.CurrentDomain.GetAssemblies().Any(a => a.GetName().Name == ApiAssemblyName);
+				if (!apiLoaded)
+				{
+					// API evtl. noch nicht geladen → bis zu ~60 s erneut versuchen
+					if (attempts < 30)
+						return false;
+
+					modEntry.Logger.Warning("MultiplayerAPI assembly not loaded – multiplayer sync disabled.");
+					return true;
 				}
 
 				string path = Path.Combine(modEntry.Path, IntegrationDll);
 				if (!File.Exists(path))
 				{
-					modEntry.Logger.Warning($"{IntegrationDll} not found – multiplayer sync disabled.");
-					return;
+					modEntry.Logger.Warning($"{IntegrationDll} not found in {modEntry.Path} – multiplayer sync disabled.");
+					return true;
 				}
+
+				// Eine per LoadFile geladene DLL findet ihre Abhängigkeiten nicht immer selbst →
+				// MultiplayerAPI ausdrücklich auf die bereits geladene Kopie der Multiplayer-Mod umbiegen
+				// (eine zweite Kopie hätte eigene statische Events → Host/Client würden nie verbunden)
+				AppDomain.CurrentDomain.AssemblyResolve -= ResolveApi;
+				AppDomain.CurrentDomain.AssemblyResolve += ResolveApi;
 
 				var asm = Assembly.LoadFile(path);
 				var bootstrap = asm.GetType(BootstrapTypeName);
 				if (bootstrap == null)
 				{
 					modEntry.Logger.Warning($"{BootstrapTypeName} not found – multiplayer sync disabled.");
-					return;
+					return true;
 				}
 
 				var init = bootstrap.GetMethod("Initialize", BindingFlags.Public | BindingFlags.Static);
@@ -100,13 +122,16 @@ namespace LongerLoadingDelay
 					(Action<byte[]>)OnStateReceived,
 					(Func<byte[]>)BuildState,
 					(Action)OnClientStopped,
-					(Action<string>)(msg => Main.Log(" MP: " + msg))
+					(Action<string>)(msg => modEntry.Logger.Log("MP: " + msg))
 				});
 
 				if (!ok)
 				{
-					Main.Log(" Multiplayer API not ready → single player mode");
-					return;
+					if (attempts < 30)
+						return false;		// API-Instanz noch nicht bereit → später
+
+					modEntry.Logger.Warning("Multiplayer API not ready – multiplayer sync disabled.");
+					return true;
 				}
 
 				isClient = (Func<bool>)Delegate.CreateDelegate(typeof(Func<bool>), bootstrap.GetMethod("IsClient", BindingFlags.Public | BindingFlags.Static)!);
@@ -114,16 +139,40 @@ namespace LongerLoadingDelay
 				broadcast = (Action<byte[]>)Delegate.CreateDelegate(typeof(Action<byte[]>), bootstrap.GetMethod("Broadcast", BindingFlags.Public | BindingFlags.Static)!);
 
 				Available = true;
-				modEntry.Logger.Log("Multiplayer sync active.");
+				var apis = AppDomain.CurrentDomain.GetAssemblies().Where(a => a.GetName().Name == ApiAssemblyName).ToList();
+				modEntry.Logger.Log($"Multiplayer sync active (MultiplayerAPI loaded {apis.Count}×: {string.Join(", ", apis.Select(a => a.GetName().Version + " @ " + SafeLocation(a)))}).");
+				if (apis.Count > 1)
+					modEntry.Logger.Warning("MultiplayerAPI is loaded more than once – remove any MultiplayerAPI.dll from the LongerLoadingDelay folder!");
+				return true;
 			}
 			catch (Exception e)
 			{
-				modEntry.Logger.Warning("Multiplayer integration failed: " + e.Message);
+				var inner = e is TargetInvocationException tie && tie.InnerException != null ? tie.InnerException : e;
+				modEntry.Logger.Warning("Multiplayer integration failed: " + inner.GetType().Name + ": " + inner.Message);
 				isClient = isHost = null;
 				broadcast = null;
 				Available = false;
+				return true;
 			}
 		}
+
+		private static string SafeLocation(Assembly a)
+		{
+			try { return a.Location; } catch { return "?"; }
+		}
+
+		private static Assembly? ResolveApi(object sender, ResolveEventArgs args)
+		{
+			var name = new AssemblyName(args.Name).Name;
+			if (name != ApiAssemblyName)
+				return null;
+
+			return AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == ApiAssemblyName);
+		}
+
+		private static bool loggedFirstBroadcast;
+
+		private static void LogOnce(string msg) => entry?.Logger.Log(msg);
 
 		// =========================
 		// HOST: Zustand senden
@@ -144,7 +193,14 @@ namespace LongerLoadingDelay
 
 			try
 			{
-				broadcast(BuildState());
+				var data = BuildState();
+				broadcast(data);
+
+				if (!loggedFirstBroadcast)
+				{
+					loggedFirstBroadcast = true;
+					LogOnce($"MP host: state broadcast started ({data.Length} bytes, {LoadingService.Sequences.Count} sequences)");
+				}
 			}
 			catch (Exception e)
 			{
@@ -200,6 +256,15 @@ namespace LongerLoadingDelay
 				w.Write(kvp.Value.to ?? "");
 			}
 
+			// Lampenzustände (Host rechnet mit Wagen-/Gleisdaten, die der Client nicht hat)
+			var lamps = LoadingService.CurrentLampStates;
+			w.Write(lamps.Count);
+			foreach (var kv in lamps)
+			{
+				w.Write(kv.Key);
+				w.Write((byte)kv.Value);
+			}
+
 			w.Flush();
 			return ms.ToArray();
 		}
@@ -220,7 +285,7 @@ namespace LongerLoadingDelay
 				byte version = r.ReadByte();
 				if (version != StateVersion)
 				{
-					Main.Log($" MP: unknown state version {version} (expected {StateVersion}) – host uses another mod version");
+					LogOnce($" MP: unknown state version {version} (expected {StateVersion}) – host uses another mod version");
 					return;
 				}
 
@@ -264,15 +329,23 @@ namespace LongerLoadingDelay
 					AltTracks.Redirects[job] = (from, to);
 				}
 
+				int lampCount = r.ReadInt32();
+				LoadingService.SyncedLampStates.Clear();
+				for (int i = 0; i < lampCount; i++)
+				{
+					string track = r.ReadString();
+					LoadingService.SyncedLampStates[track] = (LampState)r.ReadByte();
+				}
+
 				if (!receivedState)
 				{
 					receivedState = true;
-					Main.Log(" MP: first state from host received → settings are controlled by the host");
+					LogOnce($"MP client: first state from host received ({data.Length} bytes, {count} sequences) → settings are controlled by the host");
 				}
 			}
 			catch (Exception e)
 			{
-				Main.Log(" MP: state could not be read: " + e.Message);
+				LogOnce("MP client: state could not be read: " + e.GetType().Name + ": " + e.Message);
 			}
 		}
 
@@ -285,6 +358,7 @@ namespace LongerLoadingDelay
 			GameClock.ClearHostTime();
 			Main.RestoreLocalSettings();
 			LoadingService.ApplySyncedSequences(new List<LoadSequence>());
+			LoadingService.SyncedLampStates.Clear();
 			Penalties.Reset();
 			AltTracks.Redirects.Clear();
 			Main.Log(" MP: disconnected → local settings restored");

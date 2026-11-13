@@ -340,10 +340,19 @@ namespace LongerLoadingDelay
 				}
 			}
 
-			UpdateLampStates(Schedule.RateAt(nowAbs) <= 0);
+			// Lampenfarben NICHT selbst berechnen: dafür braucht es Wagen-/Gleisdaten, die nur der Host auflöst
+			// (sonst z. B. "Unterbrochen" beim Client weiß statt rot) → Zustand des Hosts übernehmen
+			lampStates.Clear();
+			foreach (var kv in SyncedLampStates)
+				lampStates[kv.Key] = kv.Value;
+
 			RefreshDisplays();
 			MachineClock.Tick(nowAbs);
 		}
+
+		// Multiplayer: Lampenzustände des Hosts (Gleis → Zustand)
+		public static readonly Dictionary<string, LampState> SyncedLampStates = new();
+		public static IReadOnlyDictionary<string, LampState> CurrentLampStates => lampStates;
 
 		// Vom Host empfangene Sequenzen übernehmen (Gleise ohne Sequenz bekommen wieder ihre Normalanzeige)
 		public static void ApplySyncedSequences(List<LoadSequence> list)

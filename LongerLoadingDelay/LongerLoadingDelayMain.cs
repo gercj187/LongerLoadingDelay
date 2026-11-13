@@ -96,10 +96,17 @@ namespace LongerLoadingDelay
 		// =========================
 		// MULTIPLAYER
 		// =========================
+		private static float mpRetryAt;
+
 		private static void InitMultiplayer(UnityModManager.ModEntry modEntry, float dt)
 		{
-			modEntry.OnLateUpdate = null;
-			Mp.Initialize(modEntry);
+			if (Time.unscaledTime < mpRetryAt)
+				return;
+
+			if (Mp.Initialize(modEntry))
+				modEntry.OnLateUpdate = null;		// fertig
+			else
+				mpRetryAt = Time.unscaledTime + 2f;	// MultiplayerAPI noch nicht bereit → in 2 s erneut
 		}
 
 		// Client: spielrelevante Werte vom Host übernehmen (eigene Datei bleibt unangetastet)
